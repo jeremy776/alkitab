@@ -1,50 +1,68 @@
 'use client';
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { preload } from "react-dom";
 import { FiAlignLeft, FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import useSWR from "swr";
 
 export default function Home() {
   const router = useRouter();
-  const [dataList, setDataList] = useState<AlkitabList[] | null>(null);
-  const [ayatList, setAyatList] = useState<Ayat | null>(null);
   const param = useParams() as { passage: string, chapter: string };
-  useEffect(() => {
-    async function fetchData() {
-      const dataList = await getAlkitabList();
-      setDataList(dataList);
-      const ayatList = await getAyatList(param.passage, param.chapter);
-      console.log(ayatList);
-      setAyatList(ayatList);
-    }
-    fetchData();
-  }, []);
+  const fetcher = (...args: Parameters<typeof fetch>) => fetch(...args).then((res) => res.json());
+
+  const { data: dataAlkitab, error, isLoading } = useSWR('/api/alkitab/v1/passage/list', fetcher);
+  const dataList = dataAlkitab?.data as AlkitabList[];
+
+  const { data: ayatListData, error: errorAyat, isLoading: isLoadingAyat } = useSWR(`/api/alkitab/v1/passage/${param.passage}/${param.chapter}`, fetcher, {
+    suspense: true
+  });
+  const ayatList = ayatListData as Ayat;
+
+  // useEffect(() => {
+  //   function fetchData() {
+  //     const index = dataList?.findIndex((data) => data.abbr.toLowerCase().replace(/ /g, '') === param.passage);
+  //     if (param.chapter == dataList?.[index!].chapter.toString()) {
+  //       if (index === dataList?.length! - 1) return;
+  //       const nextPassage = dataList?.[index! + 1].abbr.toLowerCase().replace(/ /g, '');
+  //       preload(`/id/${nextPassage}/1`);
+  //       router.prefetch(`/id/${nextPassage}/1`);
+  //     } else {
+  //       console.log(Number(param.chapter) + 1);
+  //       preload(`/id/${param.passage}/${Number(param.chapter) + 1}`);
+  //       router.prefetch(`/id/${param.passage}/${Number(param.chapter) + 1}`);
+  //     }
+  //   }
+  //   // fetchData();
+  // }, [param]);
+
   return (
     <main>
       <div className="z-[900000000] fixed flex justify-between w-full h-[90vh] items-center px-4">
         <button
-        onClick={() => {
-          const index = dataList?.findIndex((data) => data.abbr.toLowerCase().replace(/ /g, '') === param.passage);
-          
-          if(param.chapter == '1') {
-            if (index === 0) return;
-            const nextPassage = dataList?.[index! - 1].abbr.toLowerCase().replace(/ /g, '');
-            const lastChapter = dataList?.[index! - 1].chapter;
-            router.push(`/id/${nextPassage}/${lastChapter}`);
-          } else {
-            router.push(`/id/${param.passage}/${Number(param.chapter)-1}`);
-          }
-        }}
-        className="bg-white shadow-md rounded-full">
+          onClick={() => {
+            const index = dataList?.findIndex((data) => data.abbr.toLowerCase().replace(/ /g, '') === param.passage);
+
+            if (param.chapter == '1') {
+              if (index === 0) return;
+              const nextPassage = dataList?.[index! - 1].abbr.toLowerCase().replace(/ /g, '');
+              const lastChapter = dataList?.[index! - 1].chapter;
+              router.push(`/id/${nextPassage}/${lastChapter}`);
+            } else {
+              router.push(`/id/${param.passage}/${Number(param.chapter) - 1}`);
+            }
+          }}
+          className="bg-white shadow-md rounded-full">
           <FiChevronLeft className="w-10 h-10 p-2" />
         </button>
         <button onClick={() => {
           const index = dataList?.findIndex((data) => data.abbr.toLowerCase().replace(/ /g, '') === param.passage);
-          if(param.chapter == dataList?.[index!].chapter.toString()) {
+          if (param.chapter == dataList?.[index!].chapter.toString()) {
             if (index === dataList?.length! - 1) return;
             const nextPassage = dataList?.[index! + 1].abbr.toLowerCase().replace(/ /g, '');
             router.push(`/id/${nextPassage}/1`);
           } else {
-            router.push(`/id/${param.passage}/${Number(param.chapter)+1}`);
+            console.log(Number(param.chapter) + 1);
+            router.push(`/id/${param.passage}/${Number(param.chapter) + 1}`);
           }
 
         }} className="bg-white shadow-md rounded-full">
@@ -52,22 +70,9 @@ export default function Home() {
         </button>
       </div>
 
-      <div className="p-2 z-50 w-full bg-white">
-        <div>
-          <select className="select max-w-xs">
-            <option disabled>Pilih ayat</option>
-            {
-              dataList && dataList.map((data: AlkitabList) => (
-                <option key={data.no} value={data.abbr}>{data.name}</option>
-              ))
-            }
-          </select>
-        </div>
-      </div>
-
       <div className="py-10">
         <h2 className="text-center text-2xl font-bold uppercase">
-          {ayatList?.book.name} {param.chapter}
+          {ayatList?.book.name} {ayatList?.book.chapter}
         </h2>
         <div className="mt-5">
           {ayatList?.verses.map((verse, index) => {

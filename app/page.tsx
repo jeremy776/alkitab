@@ -53,8 +53,8 @@ export default function Home() {
           </div>
         </section>
         <section style={{ backgroundImage: 'url(https://i.pinimg.com/564x/0c/9f/06/0c9f06db27bdad7d97be5c5a43b0e1f2.jpg)' }} className="hero after:w-full after:h-full after:bg-black/80 after:absolute relative px-4 py-48 flex items-center justify-center">
-          <div className="z-[200] max-w-4xl border-l-4 rounded-md backdrop-blur-sm px-5">
-            <h2 className="text-xl md:text-3xl text-gray-300 my-10">{ayatquote.bunyi}</h2>
+          <div className="z-[200] max-w-4xl border-l-4 rounded-md py-5 md:py-10 bg-white/5 backdrop-blur-md px-5 md:px-10">
+            <h2 className="text-xl md:text-3xl text-gray-300 mb-10">{ayatquote.bunyi}</h2>
             <p className="text-md md:text-2xl text-right text-gray-400">{ayatquote.ayat}</p>
           </div>
         </section>
