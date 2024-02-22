@@ -5,7 +5,7 @@ export default function Navbar() {
         <a className="btn btn-ghost text-xl">Alkitab.com</a>
       </div>
       <div className="flex-none">
-        <ul className="menu menu-horizontal px-1">
+        {/* <ul className="menu menu-horizontal px-1">
           <li>
             <details>
               <summary>
@@ -17,7 +17,7 @@ export default function Navbar() {
               </ul>
             </details>
           </li>
-        </ul>
+        </ul> */}
       </div>
     </div>
   )
