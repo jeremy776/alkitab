@@ -5,12 +5,8 @@ import useSWR from "swr";
 
 
 export default function Passage() {
-  // const [chapter, setChapter] = useState<number>(0);
-  // const [no, setNo] = useState<number>(0);
-
   const router = useRouter();
   const pathname = useParams() as { passage: string };
-
 
   const fetcher = (...args: Parameters<typeof fetch>) => fetch(...args).then((res) => res.json());
 
@@ -22,15 +18,6 @@ export default function Passage() {
   const dataList = filterData ? filterData[0] : { chapter: 0, no: 0 };
   const chapter = dataList.chapter;
   const no = dataList.no;
-
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     const dataList = await getAlkitabList(pathname.passage);
-  //     setChapter(dataList.chapter);
-  //     setNo(dataList.no);
-  //   }
-  //   fetchData();
-  // }, []);
   return (
     <main className="pt-2">
       <div className="grid grid-cols-4 md:grid-cols-5 gap-3 px-3 pb-20 ">

@@ -17,84 +17,109 @@ export default function Home() {
     suspense: true
   });
   const ayatList = ayatListData as Ayat;
-
-  // useEffect(() => {
-  //   function fetchData() {
-  //     const index = dataList?.findIndex((data) => data.abbr.toLowerCase().replace(/ /g, '') === param.passage);
-  //     if (param.chapter == dataList?.[index!].chapter.toString()) {
-  //       if (index === dataList?.length! - 1) return;
-  //       const nextPassage = dataList?.[index! + 1].abbr.toLowerCase().replace(/ /g, '');
-  //       preload(`/id/${nextPassage}/1`);
-  //       router.prefetch(`/id/${nextPassage}/1`);
-  //     } else {
-  //       console.log(Number(param.chapter) + 1);
-  //       preload(`/id/${param.passage}/${Number(param.chapter) + 1}`);
-  //       router.prefetch(`/id/${param.passage}/${Number(param.chapter) + 1}`);
-  //     }
-  //   }
-  //   // fetchData();
-  // }, [param]);
-
+  const [selectedPassage, setSelectedPassage] = useState<any>([]);
   return (
     <main>
-      <div className="z-[900000000] fixed flex justify-between w-full h-[90vh] items-center px-4">
-        <button
-          onClick={() => {
-            const index = dataList?.findIndex((data) => data.abbr.toLowerCase().replace(/ /g, '') === param.passage);
-
-            if (param.chapter == '1') {
-              if (index === 0) return;
-              const nextPassage = dataList?.[index! - 1].abbr.toLowerCase().replace(/ /g, '');
-              const lastChapter = dataList?.[index! - 1].chapter;
-              router.push(`/id/${nextPassage}/${lastChapter}`);
-            } else {
-              router.push(`/id/${param.passage}/${Number(param.chapter) - 1}`);
-            }
-          }}
-          className="bg-white shadow-md rounded-full">
-          <FiChevronLeft className="w-10 h-10 p-2" />
-        </button>
-        <button onClick={() => {
+      <button
+        onClick={() => {
           const index = dataList?.findIndex((data) => data.abbr.toLowerCase().replace(/ /g, '') === param.passage);
-          if (param.chapter == dataList?.[index!].chapter.toString()) {
-            if (index === dataList?.length! - 1) return;
-            const nextPassage = dataList?.[index! + 1].abbr.toLowerCase().replace(/ /g, '');
-            router.push(`/id/${nextPassage}/1`);
+
+          if (param.chapter == '1') {
+            if (index === 0) return;
+            const nextPassage = dataList?.[index! - 1].abbr.toLowerCase().replace(/ /g, '');
+            const lastChapter = dataList?.[index! - 1].chapter;
+            router.push(`/id/${nextPassage}/${lastChapter}`);
           } else {
-            console.log(Number(param.chapter) + 1);
-            router.push(`/id/${param.passage}/${Number(param.chapter) + 1}`);
+            router.push(`/id/${param.passage}/${Number(param.chapter) - 1}`);
           }
+        }}
+        className="bg-white fixed z-2 translate-y-80 translate-x-4 shadow-md rounded-full">
+        <FiChevronLeft className="w-10 h-10 p-2" />
+      </button>
+      <button onClick={() => {
+        const index = dataList?.findIndex((data) => data.abbr.toLowerCase().replace(/ /g, '') === param.passage);
+        if (param.chapter == dataList?.[index!].chapter.toString()) {
+          if (index === dataList?.length! - 1) return;
+          const nextPassage = dataList?.[index! + 1].abbr.toLowerCase().replace(/ /g, '');
+          router.push(`/id/${nextPassage}/1`);
+        } else {
+          console.log(Number(param.chapter) + 1);
+          router.push(`/id/${param.passage}/${Number(param.chapter) + 1}`);
+        }
 
-        }} className="bg-white shadow-md rounded-full">
-          <FiChevronRight className="w-10 h-10 p-2" />
-        </button>
-      </div>
+      }} className="bg-white fixed z-2 right-0 translate-y-80 -translate-x-4 shadow-md rounded-full">
+        <FiChevronRight className="w-10 h-10 p-2" />
+      </button>
+      {/* </div> */}
 
-      <div className="py-10">
-        <h2 className="text-center text-2xl font-bold uppercase">
-          {ayatList?.book.name} {ayatList?.book.chapter}
-        </h2>
-        <div className="mt-5">
-          {ayatList?.verses.map((verse, index) => {
-            if (verse.type === "title") return (
-              <div key={index} className="text-center px-3 py-10">
-                <p className="text-xl font-bold">{verse.content}</p>
-              </div>
-            )
+      <div className="flex items-center justify-center">
+        <div className="py-5 max-w-2xl">
+          <div className="mb-10">
+            <div className="flex justify-around items-center">
+              <select onChange={(e) => {
+                console.log(e.target.value);
+                router.push(`/id/${e.target.value}/1`);
+              }} className="bg-white border-2 border-blue-200 rounded-md px-2 py-1" name="passage" id="passage">
+                {dataList?.map((item, index) => {
+                  return (
+                    <option key={index} selected={item.abbr.toLowerCase().replace(/ /g, '') == param.passage ? true : false} value={item.abbr.toLowerCase().replace(/ /g, '')}>{item.name}</option>
+                  )
+                })}
+              </select>
+              <select onChange={(e) => {
+                router.push(`/id/${param.passage}/${e.target.value}`);
+              }} className="bg-white border-2 border-blue-200 rounded-md px-2 py-1" name="chapter" id="chapter">
+                {Array.from(Array(dataList?.find((item) => item.abbr.toLowerCase().replace(/ /g, '') == param.passage)?.chapter).keys()).map((_, index) => {
+                  return (
+                    <option key={index} selected={index + 1 == Number(param.chapter) ? true : false} value={index + 1}>{index + 1}</option>
+                  )
+                })}
+              </select>
+            </div>
+          </div>
 
-            return (
-              <div key={index} className="px-3 py-1.5">
-                <p className="text-lg">
-                  <p className="text-xs inline-flex mr-1 ml-2 font-bold">{verse.verse}</p>
-                  {verse.content}</p>
-              </div>
-            )
-          })}
+          <h2 className="text-center text-2xl font-bold uppercase">
+            {ayatList?.book.name} {ayatList?.book.chapter}
+          </h2>
+          <div className="mt-2">
+            {ayatList?.verses.map((verse, index) => {
+              if (verse.type === "title") {
+                return (
+                  <div key={index} className="text-center px-3 py-5">
+                    <p className="text-xl font-bold">{verse.content}</p>
+                  </div>
+                )
+              }
+
+              let isSelected = selectedPassage.includes(verse.verse);
+
+              return (
+                <div onClick={() => {
+                  // check if verse already selected then remove it from array
+                  if (selectedPassage.includes(verse.verse)) {
+                    setSelectedPassage(selectedPassage.filter((item: number) => item !== verse.verse));
+                  } else {
+                    setSelectedPassage([...selectedPassage, verse.verse]);
+                  }
+                }} key={index} className={"px-3 my-1 rounded-lg cursor-pointer py-.5 transition-all ease-in " + (isSelected ? "bg-blue-200 text-blue-700" : "")}>
+                  <p className="text-lg">
+                    <p className="text-xs inline mr-1 ml-2 font-bold">{verse.verse}</p>
+                    {verse.content}</p>
+                </div>
+              )
+            })}
+          </div>
         </div>
       </div>
     </main>
   );
 }
+
+// cek apakah ada angka yang sama di antara array selectedPassage dan verse.verse
+function isSelected(selectedPassage: number[], verse: number) {
+  return selectedPassage.includes(verse);
+}
+
 
 async function getAyatList(passage: string, chapter: string) {
   passage = passage.replace(/_/g, " ");

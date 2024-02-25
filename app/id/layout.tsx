@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   description: "Baca Alkitab dalam berbagai versi bahasa dan terjemahan",
   keywords: "alkitab, alkitab online, baca alkitab, firman tuhan, ayat harian",
   openGraph: {
-    title: "Alkitab.com",
+    title: "HollyVerse | Alkitab online - Baca Alkitab dalam berbagai versi bahasa dan terjemahan",
     description: "Baca Alkitab dalam berbagai versi bahasa dan terjemahan",
     url: "https://alkitab-ecru.vercel.app/",
     type: "website"
