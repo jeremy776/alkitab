@@ -1,12 +1,17 @@
+import Link from "next/link";
+
 export default function Navbar() {
   return (
     <div className="navbar bg-base-100">
       <div className="flex-1">
-        <a className="btn btn-ghost text-xl">Alkitab.com</a>
+        <a className="btn btn-ghost text-xl">HolyVerse</a>
       </div>
       <div className="flex-none">
-        {/* <ul className="menu menu-horizontal px-1">
+        <ul className="menu menu-horizontal px-1">
           <li>
+            <Link href={'/'}>Beranda</Link>
+          </li>
+          {/* <li>
             <details>
               <summary>
                 Baca lengkap
@@ -16,8 +21,8 @@ export default function Navbar() {
                 <li><a>Link 2</a></li>
               </ul>
             </details>
-          </li>
-        </ul> */}
+          </li> */}
+        </ul>
       </div>
     </div>
   )
