@@ -1,20 +1,10 @@
-'use client';
 
 import BottomNav from "@/components/bottom-nav";
 import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import DailyQuote from "@/components/dailyQuote";
+
 export default function Home() {
-  const router = useRouter();
-  const [ayatquote, setAyatQuote] = useState<ayatQuote>({});
-  useEffect(() => {
-    fetch("/api/alkitab/daily")
-      .then((res) => res.json())
-      .then((data) => {
-        setAyatQuote(data);
-      });
-  }, []);
   return (
     <>
       <Navbar />
@@ -35,9 +25,7 @@ export default function Home() {
               Yang bisa Anda lakukan di HolyVerse
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div onClick={() => {
-                router.push('/id')
-              }} className="cursor-pointer card shadow-sm border group hover:bg-blue-500 hover:shadow-xl transition-all ease-linear">
+              <div className="cursor-pointer card shadow-sm border group hover:bg-blue-500 hover:shadow-xl transition-all ease-linear">
                 <div className="card-body">
                   <h2 className="card-title group-hover:text-white">Baca alkitab</h2>
                   <p className="text-gray-500 group-hover:text-gray-300">
@@ -57,10 +45,7 @@ export default function Home() {
           </div>
         </section>
         <section style={{ backgroundImage: 'url(https://i.pinimg.com/564x/0c/9f/06/0c9f06db27bdad7d97be5c5a43b0e1f2.jpg)' }} className="hero after:w-full after:h-full after:bg-black/80 after:absolute relative px-4 py-48 flex items-center justify-center">
-          <div className="z-[200] max-w-4xl border-l-4 rounded-md py-5 md:py-10 bg-white/5 backdrop-blur-md px-5 md:px-10">
-            <h2 className="text-xl md:text-3xl text-gray-300 mb-10">{ayatquote.bunyi}</h2>
-            <p className="text-md md:text-2xl text-right text-gray-400">{ayatquote.ayat}</p>
-          </div>
+          <DailyQuote />
         </section>
       </main>
       <BottomNav />
