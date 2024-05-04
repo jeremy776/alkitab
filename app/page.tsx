@@ -3,6 +3,9 @@ import BottomNav from "@/components/bottom-nav";
 import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
 import DailyQuote from "@/components/dailyQuote";
+import { Router, useRouter } from "next/router";
+import BacaAlkitab from "@/components/BacaAlkitab";
+import LaguRohani from "@/components/LaguRohani";
 
 export default function Home() {
   return (
@@ -24,15 +27,8 @@ export default function Home() {
             <h2 className="text-2xl font-bold pb-10">
               Yang bisa Anda lakukan di HolyVerse
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="cursor-pointer card shadow-sm border group hover:bg-blue-500 hover:shadow-xl transition-all ease-linear">
-                <div className="card-body">
-                  <h2 className="card-title group-hover:text-white">Baca alkitab</h2>
-                  <p className="text-gray-500 group-hover:text-gray-300">
-                    Baca Alkitab dalam berbagai versi bahasa dan terjemahan
-                  </p>
-                </div>
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+              <BacaAlkitab />
               <div className="card shadow-sm border group hover:bg-blue-500 hover:shadow-xl transition-all ease-linear">
                 <div className="card-body">
                   <h2 className="card-title group-hover:text-white">Ayat Harian</h2>
@@ -41,6 +37,7 @@ export default function Home() {
                   </p>
                 </div>
               </div>
+              <LaguRohani />
             </div>
           </div>
         </section>
