@@ -1,7 +1,7 @@
 import Footer from "@/components/footer";
 
 export default async function MainContent() {
-  let data = await fetch("https://dummyjson.com/products/1", {
+  let data = await fetch("https://dummyjson.com/products", {
     cache: "no-cache",
   });
   let songList = await data.json();
