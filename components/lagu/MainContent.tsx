@@ -1,11 +1,11 @@
 import Footer from "@/components/footer";
 
 export default async function MainContent() {
-  let data = await fetch("https://dummyjson.com/products", {
+  let data = await fetch("https://alkitab-ecru.vercel.app/api/songs", {
     cache: "no-cache",
   });
   let songList = await data.json();
-  const bukuLagu = songList.products;
+  const bukuLagu = songList.body;
   return (
     <div>
       <div className="grid md:grid-cols-2 gap-10">
