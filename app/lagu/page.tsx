@@ -1,6 +1,6 @@
 import Link from "next/link";
-import Container from "./components/Container";
-import MainContent from "./components/MainContent";
+import Container from "../../components/lagu/Container";
+import MainContent from "../../components/lagu/MainContent";
 
 export default function Index() {
   return (

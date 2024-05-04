@@ -1,7 +1,7 @@
 import Footer from "@/components/footer";
 
 export default async function MainContent() {
-  let data = await fetch("https://alkitab-ecru.vercel.app/api/songs", {
+  let data = await fetch("https://dummyjson.com/products/1", {
     cache: "no-cache",
   });
   let songList = await data.json();
