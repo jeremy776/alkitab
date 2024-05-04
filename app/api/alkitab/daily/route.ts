@@ -21,6 +21,7 @@ export async function GET(req: Request, res: Response) {
   const harike = new Date().getDate();
 
   const data = require(`../../../../utils/data/daily/${tahun}/ayat-alkitab/${bulanIni.toLocaleLowerCase()}.json`);
+  console.log(bulanIni);
   return Response.json({
     bunyi: data[harike - 1].bunyi,
     ayat: data[harike - 1].ayat,
