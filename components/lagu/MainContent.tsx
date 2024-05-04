@@ -5,7 +5,7 @@ export default async function MainContent() {
     cache: "no-cache",
   });
   let songList = await data.json();
-  const bukuLagu = songList.body;
+  const bukuLagu = songList.products;
   return (
     <div>
       <div className="grid md:grid-cols-2 gap-10">
