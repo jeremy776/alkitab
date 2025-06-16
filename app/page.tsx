@@ -31,11 +31,12 @@ export default function TurboBuilderPage() {
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-lg">
-              T
-            </div>
+            {/* <div className="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-lg">
+              S
+            </div> */}
+            <Image src={"/logo.png"} className="rounded-xl" width={36} alt="SelaVibes" height={36} />
             <span className="text-gray-900 font-semibold text-lg tracking-tight">
-              TurboBuilder
+              SelaVibes
             </span>
           </div>
 
@@ -145,52 +146,52 @@ export default function TurboBuilderPage() {
             </span>
 
             <h1 className="text-4xl sm:text-5xl font-bold leading-tight mb-6">
-              Build a Website in Minutes
+              Waktunya Sela.
               <br />
-              Without Writing Code
+              Vibes-nya Kamu.
             </h1>
 
             <p className="text-lg text-gray-600 mb-6 max-w-xl">
-              Choose from dozens of professionally designed sections to create
-              beautiful, responsive landing pages — all in your browser.
+              SelaVibes bantu kamu connect sama Tuhan lewat lagu, ayat, dan fun
+              facts yang relatable banget.
             </p>
 
             <ul className="text-sm text-gray-700 mb-8 space-y-2">
               <li className="flex items-center gap-2">
-                ✅ Drag & drop live editor with real-time preview
+                ✅ Lagu-lagu rohani keren siap diputar kapan aja
               </li>
               <li className="flex items-center gap-2">
-                ✅ Export HTML with 1 click — no lock-in
+                ✅ Ayat harian dengan vibe kekinian
               </li>
               <li className="flex items-center gap-2">
-                ✅ Built-in Tailwind CSS support for developers
+                ✅ Fun trivia & quotes yang nancep di hati
               </li>
             </ul>
 
             <div className="flex flex-wrap gap-4">
               <button className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition">
-                🚀 Start Building
+                📖 Ayo Teduh Yuk
               </button>
-              <button className="border border-gray-300 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 transition">
+              {/* <button className="border border-gray-300 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 transition">
                 📺 Watch Demo
-              </button>
+              </button> */}
             </div>
           </div>
 
           {/* Right: Image with Overlay */}
           <div className="relative hidden lg:block">
-            {/* <Image
-              src="https://placehold.co/600x400?text=Preview+Image"
+            <Image
+              src="/hero.png"
               alt="Builder preview"
               width={600}
               height={400}
-              className="rounded-xl shadow-lg"
+              className="rounded-xl"
               priority
-            /> */}
+            />
 
             {/* Overlay Badge */}
             <div className="absolute top-4 left-4 bg-white text-indigo-600 text-xs font-bold px-3 py-1 rounded-full shadow">
-              Live Preview
+              SaTe Bareng
             </div>
           </div>
         </div>
@@ -199,46 +200,49 @@ export default function TurboBuilderPage() {
       {/* Features Section */}
       <section id="features" className="bg-gray-50 py-20 px-6">
         <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-            Built for Speed and Flexibility
+          <h2 className="text-3xl sm:text-4xl text-gray-700 font-bold mb-4">
+            📖 Ayat Harian yang Relatable
           </h2>
           <p className="text-gray-600 mb-12">
-            Powerful building blocks to launch faster, look better, and iterate
-            quicker.
+            Setiap hari kamu bakal dapet satu ayat yang nancep di hati—gak
+            terlalu panjang, tapi kena banget.
           </p>
 
           <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6">
             <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition">
               <h3 className="text-indigo-600 font-semibold mb-2">
-                Easy to Customize
+                🙏 Doa Harian Biar Gak Lupa Ngobrol Sama Tuhan
               </h3>
               <p className="text-sm text-gray-600">
-                Change colors, layout, or content without touching a single line
-                of code.
+                Doa singkat yang bisa kamu baca atau dengerin kapan aja. Cocok
+                buat nemenin pagi, istirahat, atau sebelum tidur.
               </p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition">
               <h3 className="text-indigo-600 font-semibold mb-2">
-                Responsive by Default
+                🎵 Playlist Rohani Bikin Hati Adem
               </h3>
               <p className="text-sm text-gray-600">
-                Each section is optimized for all devices out of the box.
+                Kumpulan lagu-lagu rohani kekinian yang bisa kamu putar biar
+                suasana hati makin tenang dan positif.
               </p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition">
               <h3 className="text-indigo-600 font-semibold mb-2">
-                SEO-Friendly
+                🧠 Tes Kepribadian Alkitabiah
               </h3>
               <p className="text-sm text-gray-600">
-                Clean semantic HTML helps you rank higher on search engines.
+                Yuk kenalan sama dirimu dari sudut pandang Alkitab—fun dan
+                insightful banget!
               </p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition">
               <h3 className="text-indigo-600 font-semibold mb-2">
-                Fast Loading
+                💬 Komunitas yang Saling Menguatkan
               </h3>
               <p className="text-sm text-gray-600">
-                No heavy libraries. Optimized for performance and speed.
+                (Coming Soon) Tempat buat saling berbagi berkat, cerita, dan
+                doa. Karena iman itu makin kuat kalau jalan bareng 🙌
               </p>
             </div>
           </div>
@@ -255,12 +259,12 @@ export default function TurboBuilderPage() {
         <div className="max-w-7xl mx-auto grid lg:grid-cols-5 gap-12">
           {/* Logo & Newsletter */}
           <div className="lg:col-span-2">
-            <h2 className="text-xl font-bold text-gray-900 mb-2">YourBrand</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-2">SelaVibes</h2>
             <p className="text-gray-600 text-sm mb-6">
-              Join 10,000+ creators using our components to build better
-              websites — faster.
+              Teman digital buat hati yang lagi butuh dikuatin. Dari ayat sampai
+              lagu rohani, semua ada di sini 🌿
             </p>
-            <form
+            {/* <form
               onSubmit={handleSubscribe}
               className="flex items-center gap-2 mb-4"
             >
@@ -278,10 +282,10 @@ export default function TurboBuilderPage() {
               >
                 Subscribe
               </button>
-            </form>
-            <p className="text-gray-400 text-xs">
+            </form> */}
+            {/* <p className="text-gray-400 text-xs">
               No spam. Unsubscribe anytime.
-            </p>
+            </p> */}
           </div>
 
           {/* Sitemap */}
@@ -348,19 +352,10 @@ export default function TurboBuilderPage() {
 
         {/* Divider */}
         <div className="border-t border-gray-100 mt-12 pt-6 text-sm text-gray-500 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p>&copy; 2025 YourBrand Inc. All rights reserved.</p>
+          <p>&copy; 2025 LazyPeople Org. All rights reserved.</p>
           <div className="flex items-center gap-4">
             <button className="hover:text-indigo-600">Privacy Policy</button>
             <button className="hover:text-indigo-600">Terms of Service</button>
-            <select
-              value={language}
-              onChange={(e) => setLanguage(e.target.value)}
-              className="bg-white border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none"
-            >
-              <option>English</option>
-              <option>Bahasa Indonesia</option>
-              <option>Français</option>
-            </select>
           </div>
         </div>
       </footer>
