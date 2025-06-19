@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import DailyVerse from "@/components/dailyVerse"
 
 export default function TurboBuilderPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -48,6 +49,14 @@ export default function TurboBuilderPage() {
                 className="hover:text-indigo-600 transition"
               >
                 Features
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => scrollToSection("daily-verse")}
+                className="hover:text-indigo-600 transition"
+              >
+                Ayat Harian
               </button>
             </li>
             <li>
@@ -107,6 +116,12 @@ export default function TurboBuilderPage() {
             className="block w-full text-left px-2 py-2 hover:bg-gray-100 rounded"
           >
             Features
+          </button>
+          <button
+            onClick={() => scrollToSection("daily-verse")}
+            className="block w-full text-left px-2 py-2 hover:bg-gray-100 rounded"
+          >
+            Ayat Harian
           </button>
           <button
             onClick={() => scrollToSection("templates")}
@@ -248,6 +263,9 @@ export default function TurboBuilderPage() {
           </div>
         </div>
       </section>
+
+      {/* Daily Verse Section */}
+      <DailyVerse />
 
       {/* Placeholder sections for navigation */}
       <div id="templates" className="h-20"></div>
