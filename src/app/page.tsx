@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import DailyVerse from "@/components/dailyVerse"
+import DailyVerse from "@/components/dailyVerse";
 
 export default function TurboBuilderPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -35,7 +35,13 @@ export default function TurboBuilderPage() {
             {/* <div className="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-lg">
               S
             </div> */}
-            <Image src={"/logo.png"} className="rounded-xl" width={36} alt="SelaVibes" height={36} />
+            <Image
+              src={"/logo.png"}
+              className="rounded-xl"
+              width={36}
+              alt="SelaVibes"
+              height={36}
+            />
             <span className="text-gray-900 font-semibold text-lg tracking-tight">
               SelaVibes
             </span>
