@@ -6,6 +6,7 @@ export async function GET() {
     // Ambil teks dari endpoint internal
     const res = await fetch(`https://alkitab-ecru.vercel.app/api/daily-verse`);
     const data = await res.json();
+     console.log(data)
 
     const text = adjustPronunciation(data.data?.text);
     if (!text || typeof text !== 'string') {
