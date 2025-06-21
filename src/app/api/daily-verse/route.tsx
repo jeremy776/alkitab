@@ -58,6 +58,7 @@ Syarat:
 2. Berikan teks ayat dalam bahasa Indonesia
 3. Sertakan referensi yang akurat (kitab, pasal, ayat)
 4. Tambahkan refleksi singkat (2-3 kalimat) yang praktis dan mudah dipahami
+5. Tampilkan maksimal hanya 1 ayat saja
 
 Format response dalam JSON:
 {
