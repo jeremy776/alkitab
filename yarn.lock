@@ -408,6 +408,13 @@
   dependencies:
     csstype "^3.0.2"
 
+axios@^0.21.0:
+  version "0.21.4"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.21.4.tgz#c67b90dc0568e5c1cf2b0b858c43ba28e2eda575"
+  integrity sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==
+  dependencies:
+    follow-redirects "^1.14.0"
+
 busboy@1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/busboy/-/busboy-1.6.0.tgz#966ea36a9502e43cdb9146962523b92f531f6893"
@@ -475,6 +482,18 @@ enhanced-resolve@^5.18.1:
   dependencies:
     graceful-fs "^4.2.4"
     tapable "^2.2.0"
+
+follow-redirects@^1.14.0:
+  version "1.15.9"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.9.tgz#a604fa10e443bf98ca94228d9eebcc2e8a2c8ee1"
+  integrity sha512-gew4GsXizNgdoRyqmyfMHyAmXsZDk6mHkSxZFCzW9gwlbtOW44CDtYavM+y+72qD/Vq2l550kMF52DT8fOLJqQ==
+
+google-tts-api@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/google-tts-api/-/google-tts-api-2.0.2.tgz#5f02bbde9b41f57569a94a3dd1d2de808a97bb97"
+  integrity sha512-MkQYbBJEdom8hJpfEVDfD3tpBtkz0X59C+FNsoRhbnCiFjZRnzyurGQ5OrAr3xkigII56/jmk0JNwZsp450G+Q==
+  dependencies:
+    axios "^0.21.0"
 
 graceful-fs@^4.2.4:
   version "4.2.11"

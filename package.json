@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
+    "google-tts-api": "^2.0.2",
     "lucide-react": "^0.519.0",
     "next": "15.3.4",
     "openai": "^5.5.1",
