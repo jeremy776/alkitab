@@ -4,7 +4,7 @@ import googleTTS from 'google-tts-api';
 export async function GET() {
   try {
     // Ambil teks dari endpoint internal
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/daily-verse`);
+    const res = await fetch(`https://alkitab-ecru.vercel.app/api/daily-verse`);
     const data = await res.json();
 
     const text = adjustPronunciation(data.data?.text);
