@@ -68,26 +68,10 @@ export default function TurboBuilderPage() {
             </li>
             <li>
               <button
-                onClick={() => scrollToSection("templates")}
+                onClick={() => scrollToSection("music")}
                 className="hover:text-indigo-600 transition"
               >
-                Templates
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => scrollToSection("learn")}
-                className="hover:text-indigo-600 transition"
-              >
-                Resources
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => scrollToSection("about")}
-                className="hover:text-indigo-600 transition"
-              >
-                About
+                Music
               </button>
             </li>
           </ul>
@@ -278,36 +262,14 @@ export default function TurboBuilderPage() {
 
       {/* Footer */}
       <footer className="bg-white border-t border-gray-200 pt-16 pb-10 px-6">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-5 gap-12">
-          {/* Logo & Newsletter */}
-          <div className="lg:col-span-2">
+        <div className="max-w-7xl mx-auto grid-cols-2 grid lg:grid-cols-5 gap-12">
+
+          <div className="col-span-2">
             <h2 className="text-xl font-bold text-gray-900 mb-2">SelaVibes</h2>
             <p className="text-gray-600 text-sm mb-6">
               Teman digital buat hati yang lagi butuh dikuatin. Dari ayat sampai
               lagu rohani, semua ada di sini 🌿
             </p>
-            {/* <form
-              onSubmit={handleSubscribe}
-              className="flex items-center gap-2 mb-4"
-            >
-              <input
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                required
-              />
-              <button
-                type="submit"
-                className="bg-indigo-600 text-white text-sm font-medium px-4 py-2 rounded-md hover:bg-indigo-700 transition"
-              >
-                Subscribe
-              </button>
-            </form> */}
-            {/* <p className="text-gray-400 text-xs">
-              No spam. Unsubscribe anytime.
-            </p> */}
           </div>
 
           {/* Sitemap */}

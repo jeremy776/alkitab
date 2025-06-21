@@ -138,7 +138,7 @@ const ChristianMusicSection = () => {
   };
 
   return (
-    <section className="bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-20 px-6">
+    <section id='music' className="bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-20 px-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
