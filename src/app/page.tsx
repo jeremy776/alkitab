@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import DailyVerse from "@/components/dailyVerse";
+import ChristianMusicSection from "@/components/christianMusic";
 
 export default function TurboBuilderPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -273,10 +274,7 @@ export default function TurboBuilderPage() {
       {/* Daily Verse Section */}
       <DailyVerse />
 
-      {/* Placeholder sections for navigation */}
-      <div id="templates" className="h-20"></div>
-      <div id="learn" className="h-20"></div>
-      <div id="about" className="h-20"></div>
+      <ChristianMusicSection/>
 
       {/* Footer */}
       <footer className="bg-white border-t border-gray-200 pt-16 pb-10 px-6">
