@@ -39,7 +39,7 @@ const ChristianMusicSection = () => {
       mood: "Hopeful/Encouraging",
       image:
         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop",
-      duration: 32760, // estimasi 4:00 dalam detik
+      duration: 346,
       plays: "Popular",
       description:
         "Lagu rohani yang memberikan pengharapan dan kekuatan, mengingatkan bahwa karena Yesus hidup, ada harapan untuk hari esok",
@@ -168,9 +168,9 @@ const ChristianMusicSection = () => {
   };
 
   return (
-    <section className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50 to-purple-100 py-16 px-4 relative overflow-hidden">
+    <section id='music' className="min-h-screen bg-gradient-to-br bg-white py-16 px-4 relative overflow-hidden">
       {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-purple-200/30 to-pink-300/30 rounded-full blur-3xl animate-pulse"></div>
         <div
           className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-blue-200/30 to-indigo-300/30 rounded-full blur-3xl animate-pulse"
@@ -180,25 +180,28 @@ const ChristianMusicSection = () => {
           className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-cyan-200/20 to-purple-300/20 rounded-full blur-3xl animate-pulse"
           style={{ animationDelay: "4s" }}
         ></div>
-      </div>
+      </div> */}
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
         <div className="text-center mb-16 space-y-6">
-          <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500/10 to-indigo-500/10 backdrop-blur-sm rounded-full border border-white/20 shadow-lg">
+          {/* <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500/10 to-indigo-500/10 backdrop-blur-sm rounded-full border border-white/20 shadow-lg">
             <span className="text-2xl animate-bounce">🎵</span>
             <span className="text-indigo-700 font-semibold text-md">
               Playlist Keren
             </span>
-          </div>
+          </div> */}
+          <span className="inline-block px-4 py-2 mb-4 text-sm font-medium text-indigo-700 bg-white/80 rounded-full shadow-sm">
+            🎵 Playlist Keren
+          </span>
 
           <div className="space-y-4">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 bg-clip-text text-transparent leading-tight">
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
               Lagu Rohani yang
               <br />
-              <span className="animate-pulse">Lagi Hits</span>
+              <span className="">Lagi Hits</span>
             </h1>
-            <p className="text-l text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed">
               Dari contemporary worship sampai gospel kekinian - semua yang
               bikin
               <br />
