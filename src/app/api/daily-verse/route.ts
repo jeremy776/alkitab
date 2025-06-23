@@ -19,6 +19,7 @@ interface ApiResponse {
   meta?: {
     cached: boolean;
     seed: string;
+    next_update?: string;
   };
 }
 
@@ -28,19 +29,65 @@ const API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
 
 const genAI = new GoogleGenerativeAI(API_KEY || "");
 
-function getTodayWIBDateKey(): string {
+function getWIBTime(): Date {
   const now = new Date();
-  const wibTime = new Date(now.getTime() + 7 * 60 * 60 * 1000);
+  return new Date(now.getTime() + 7 * 60 * 60 * 1000);
+}
+
+function getTodayWIBDateKey(): string {
+  const wibTime = getWIBTime();
+  
+  // Jika waktu sekarang belum jam 6 pagi WIB, gunakan tanggal kemarin
+  if (wibTime.getUTCHours() < 6) {
+    wibTime.setUTCDate(wibTime.getUTCDate() - 1);
+  }
 
   const year = wibTime.getUTCFullYear();
   const month = String(wibTime.getUTCMonth() + 1).padStart(2, "0");
   const day = String(wibTime.getUTCDate()).padStart(2, "0");
 
-  return `${year}-${month}-${day}-06:00:00-WIB`;
+  return `${year}-${month}-${day}`;
+}
+
+function getNextUpdateTime(): string {
+  const wibTime = getWIBTime();
+  let nextUpdate = new Date(wibTime);
+  
+  // Set ke jam 6 pagi hari ini
+  nextUpdate.setUTCHours(6, 0, 0, 0);
+  
+  // Jika sudah lewat jam 6 pagi, set ke jam 6 pagi besok
+  if (wibTime.getUTCHours() >= 6) {
+    nextUpdate.setUTCDate(nextUpdate.getUTCDate() + 1);
+  }
+  
+  // Convert back to local time untuk display
+  return new Date(nextUpdate.getTime() - 7 * 60 * 60 * 1000).toISOString();
+}
+
+function shouldUpdateCache(dateKey: string): boolean {
+  const wibTime = getWIBTime();
+  const currentHour = wibTime.getUTCHours();
+  
+  // Jika cache tidak ada untuk tanggal ini, perlu update
+  if (!verseCache.has(dateKey)) {
+    return true;
+  }
+  
+  // Jika sudah lewat jam 6 pagi dan cache masih untuk hari sebelumnya
+  if (currentHour >= 6) {
+    const cachedVerse = verseCache.get(dateKey);
+    if (cachedVerse) {
+      const today = getTodayWIBDateKey();
+      return cachedVerse.date !== today;
+    }
+  }
+  
+  return false;
 }
 
 function generateDeterministicSeed(dateKey: string): string {
-  return crypto.createHash("md5").update(dateKey).digest("hex");
+  return crypto.createHash("md5").update(dateKey + "-06:00:00-WIB").digest("hex");
 }
 
 async function generateVerseWithAI(
@@ -49,9 +96,7 @@ async function generateVerseWithAI(
 ): Promise<DailyVerseData> {
   const prompt = `Kamu adalah seorang pendeta yang berpengalaman dan memahami Alkitab dengan baik. 
 
-Buatkan satu ayat Alkitab harian untuk tanggal ${
-    dateKey.split("-06:00:00-WIB")[0]
-  } dengan seed: ${seed.substring(0, 8)}.
+Buatkan satu ayat Alkitab harian untuk tanggal ${dateKey} dengan seed: ${seed.substring(0, 8)}.
 
 Syarat:
 1. Pilih ayat yang relevan untuk kehidupan sehari-hari
@@ -92,7 +137,7 @@ Pastikan referensi ayat benar dan sesuai dengan teks yang diberikan.`;
     reference: parsedResponse.reference,
     text: parsedResponse.text,
     reflection: parsedResponse.reflection,
-    date: dateKey.split("-06:00:00-WIB")[0],
+    date: dateKey,
     generated_at: new Date().toISOString(),
   };
 }
@@ -103,9 +148,29 @@ function getFallbackVerse(dateKey: string): DailyVerseData {
     text: "Sebab Aku ini mengetahui rancangan-rancangan apa yang ada pada-Ku mengenai kamu, demikianlah firman TUHAN, yaitu rancangan damai sejahtera dan bukan rancangan kecelakaan, untuk memberikan kepadamu hari depan yang penuh harapan.",
     reflection:
       "Tuhan memiliki rencana terbaik untuk hidup kita. Meskipun kadang kita tidak memahami prosesnya, kita dapat percaya bahwa Dia membawa kita menuju masa depan yang penuh harapan.",
-    date: dateKey.split("-06:00:00-WIB")[0],
+    date: dateKey,
     generated_at: new Date().toISOString(),
   };
+}
+
+function cleanOldCache(): void {
+  const today = getTodayWIBDateKey();
+  const keysToDelete: string[] = [];
+  
+  for (const [key, verse] of verseCache.entries()) {
+    // Hapus cache yang lebih dari 2 hari
+    if (verse.date !== today) {
+      const verseDate = new Date(verse.date);
+      const todayDate = new Date(today);
+      const diffDays = Math.floor((todayDate.getTime() - verseDate.getTime()) / (1000 * 60 * 60 * 24));
+      
+      if (diffDays > 1) {
+        keysToDelete.push(key);
+      }
+    }
+  }
+  
+  keysToDelete.forEach(key => verseCache.delete(key));
 }
 
 export async function GET(): Promise<NextResponse<ApiResponse>> {
@@ -123,8 +188,13 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
     }
 
     const dateKey = getTodayWIBDateKey();
+    const needsUpdate = shouldUpdateCache(dateKey);
 
-    if (verseCache.has(dateKey)) {
+    // Bersihkan cache lama
+    cleanOldCache();
+
+    // Jika tidak perlu update dan cache ada, return cache
+    if (!needsUpdate && verseCache.has(dateKey)) {
       const cachedVerse = verseCache.get(dateKey)!;
       return NextResponse.json<ApiResponse>({
         status_code: 200,
@@ -134,10 +204,12 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
         meta: {
           cached: true,
           seed: generateDeterministicSeed(dateKey).substring(0, 8),
+          next_update: getNextUpdateTime(),
         },
       });
     }
 
+    // Generate verse baru
     const seed = generateDeterministicSeed(dateKey);
     let verse: DailyVerseData;
 
@@ -150,13 +222,6 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
 
     verseCache.set(dateKey, verse);
 
-    if (verseCache.size > 7) {
-      const oldestKey = verseCache.keys().next().value;
-      if (typeof oldestKey === "string") {
-        verseCache.delete(oldestKey);
-      }
-    }
-
     return NextResponse.json<ApiResponse>({
       status_code: 200,
       success: true,
@@ -165,6 +230,7 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
       meta: {
         cached: false,
         seed: seed.substring(0, 8),
+        next_update: getNextUpdateTime(),
       },
     });
   } catch (error) {
@@ -215,6 +281,8 @@ export async function POST(
     }
 
     const dateKey = getTodayWIBDateKey();
+    
+    // Hapus cache untuk tanggal ini
     verseCache.delete(dateKey);
 
     const seed = generateDeterministicSeed(dateKey);
@@ -237,6 +305,7 @@ export async function POST(
       meta: {
         cached: false,
         seed: seed.substring(0, 8),
+        next_update: getNextUpdateTime(),
       },
     });
   } catch (error) {
