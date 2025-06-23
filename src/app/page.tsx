@@ -18,19 +18,14 @@ export default function TurboBuilderPage() {
     <div className="bg-white">
       {/* Navigation */}
       <Navbar />
-
       {/* Header */}
       <Header />
-
       {/* Features Section */}
       <FeaturesSection />
-
       {/* Daily Verse Section */}
       <DailyVerse />
-
       {/* Christian Music Section */}
       <ChristianMusicSection />
-
       {/* Footer */}
       <Footer />
     </div>

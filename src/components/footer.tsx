@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function Footer() {
   return (
     <footer className="bg-white border-t border-gray-200 pt-16 pb-10 px-6">
@@ -17,16 +19,16 @@ export default function Footer() {
           </h4>
           <ul className="space-y-2 text-sm text-gray-600">
             <li>
-              <button className="hover:text-indigo-600">Features</button>
+              <Link href="/ayat-harian" className="hover:text-indigo-600">Daily Verse</Link>
             </li>
             <li>
-              <button className="hover:text-indigo-600">Templates</button>
+              <Link href="/christian-music" className="hover:text-indigo-600">Christian Music</Link>
             </li>
             <li>
-              <button className="hover:text-indigo-600">Integrations</button>
+              <Link href="/daily-prayer" className="hover:text-indigo-600">Daily Prayer</Link>
             </li>
             <li>
-              <button className="hover:text-indigo-600">Pricing</button>
+              <Link href="/quiz" className="hover:text-indigo-600">Quiz</Link>
             </li>
           </ul>
         </div>
@@ -37,7 +39,7 @@ export default function Footer() {
           </h4>
           <ul className="space-y-2 text-sm text-gray-600">
             <li>
-              <button className="hover:text-indigo-600">About</button>
+              <Link href="/about" className="hover:text-indigo-600">About Us</Link>
             </li>
             <li>
               <button className="hover:text-indigo-600">Careers</button>
@@ -46,7 +48,7 @@ export default function Footer() {
               <button className="hover:text-indigo-600">Team</button>
             </li>
             <li>
-              <button className="hover:text-indigo-600">Contact</button>
+              <Link href="/contact" className="hover:text-indigo-600">Contact Us</Link>
             </li>
           </ul>
         </div>
@@ -76,8 +78,8 @@ export default function Footer() {
       <div className="border-t border-gray-100 mt-12 pt-6 text-sm text-gray-500 flex flex-col md:flex-row justify-between items-center gap-4">
         <p>&copy; 2025 LazyPeople Org. All rights reserved.</p>
         <div className="flex items-center gap-4">
-          <button className="hover:text-indigo-600">Privacy Policy</button>
-          <button className="hover:text-indigo-600">Terms of Service</button>
+          <Link href="/privacy" className="hover:text-indigo-600">Privacy Policy</Link>
+          <Link href="/terms" className="hover:text-indigo-600">Terms of Service</Link>
         </div>
       </div>
     </footer>

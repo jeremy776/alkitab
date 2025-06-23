@@ -308,18 +308,6 @@ ${window.location.href}`;
       setIsSharing(false);
     }
   };
-
-  const handleGetNewVerse = () => {
-    const today = new Date().toDateString();
-    if (apiCallCount >= 5 && lastCallDate === today) {
-      alert(
-        "Limit harian sudah tercapai (5x). Ayat akan otomatis berganti besok jam 6 pagi WIB! 😊"
-      );
-      return;
-    }
-    callVerseAPI(false);
-  };
-
   // Format next update time untuk display
   const formatNextUpdate = (dateString: string): string => {
     try {
@@ -486,18 +474,6 @@ ${window.location.href}`;
             )}
           </button>
 
-          <button
-            onClick={handleGetNewVerse}
-            disabled={!canCallAPI || loading}
-            className={`font-medium px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 ${
-              canCallAPI && !loading
-                ? "text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 hover:scale-105 active:scale-95"
-                : "text-gray-400 cursor-not-allowed"
-            }`}
-          >
-            <span className={loading ? "animate-spin" : ""}>🔄</span>
-            {loading ? "Loading..." : "Ayat Acak"}
-          </button>
         </div>
 
         <div className="mt-12 grid sm:grid-cols-3 gap-6 text-center">

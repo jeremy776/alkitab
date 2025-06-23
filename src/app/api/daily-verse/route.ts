@@ -6,6 +6,7 @@ interface DailyVerseData {
   reference: string;
   text: string;
   reflection: string;
+  long_reflection: string;
   date: string;
   generated_at: string;
 }
@@ -36,7 +37,7 @@ function getWIBTime(): Date {
 
 function getTodayWIBDateKey(): string {
   const wibTime = getWIBTime();
-  
+
   // Jika waktu sekarang belum jam 6 pagi WIB, gunakan tanggal kemarin
   if (wibTime.getUTCHours() < 6) {
     wibTime.setUTCDate(wibTime.getUTCDate() - 1);
@@ -52,15 +53,15 @@ function getTodayWIBDateKey(): string {
 function getNextUpdateTime(): string {
   const wibTime = getWIBTime();
   let nextUpdate = new Date(wibTime);
-  
+
   // Set ke jam 6 pagi hari ini
   nextUpdate.setUTCHours(6, 0, 0, 0);
-  
+
   // Jika sudah lewat jam 6 pagi, set ke jam 6 pagi besok
   if (wibTime.getUTCHours() >= 6) {
     nextUpdate.setUTCDate(nextUpdate.getUTCDate() + 1);
   }
-  
+
   // Convert back to local time untuk display
   return new Date(nextUpdate.getTime() - 7 * 60 * 60 * 1000).toISOString();
 }
@@ -68,12 +69,12 @@ function getNextUpdateTime(): string {
 function shouldUpdateCache(dateKey: string): boolean {
   const wibTime = getWIBTime();
   const currentHour = wibTime.getUTCHours();
-  
+
   // Jika cache tidak ada untuk tanggal ini, perlu update
   if (!verseCache.has(dateKey)) {
     return true;
   }
-  
+
   // Jika sudah lewat jam 6 pagi dan cache masih untuk hari sebelumnya
   if (currentHour >= 6) {
     const cachedVerse = verseCache.get(dateKey);
@@ -82,7 +83,7 @@ function shouldUpdateCache(dateKey: string): boolean {
       return cachedVerse.date !== today;
     }
   }
-  
+
   return false;
 }
 
@@ -109,7 +110,8 @@ Format response dalam JSON:
 {
   "reference": "Nama Kitab Pasal:Ayat",
   "text": "Teks ayat lengkap dalam bahasa Indonesia",
-  "reflection": "Refleksi singkat yang praktis dan mudah dipahami"
+  "reflection": "Refleksi singkat yang praktis dan mudah dipahami",
+  "long_reflection": "Refleksi panjang untuk merenungkan ayat ini buat para pembaca, berikan kalimat yang mudah dipahami. berikan minimal 3 paragraf dan gunakan format markdown untuk menebalkan, memiringkan, dan enter sebuah teks."
 }
 
 Pastikan referensi ayat benar dan sesuai dengan teks yang diberikan.`;
@@ -137,6 +139,7 @@ Pastikan referensi ayat benar dan sesuai dengan teks yang diberikan.`;
     reference: parsedResponse.reference,
     text: parsedResponse.text,
     reflection: parsedResponse.reflection,
+    long_reflection: parsedResponse.long_reflection,
     date: dateKey,
     generated_at: new Date().toISOString(),
   };
@@ -148,6 +151,8 @@ function getFallbackVerse(dateKey: string): DailyVerseData {
     text: "Sebab Aku ini mengetahui rancangan-rancangan apa yang ada pada-Ku mengenai kamu, demikianlah firman TUHAN, yaitu rancangan damai sejahtera dan bukan rancangan kecelakaan, untuk memberikan kepadamu hari depan yang penuh harapan.",
     reflection:
       "Tuhan memiliki rencana terbaik untuk hidup kita. Meskipun kadang kita tidak memahami prosesnya, kita dapat percaya bahwa Dia membawa kita menuju masa depan yang penuh harapan.",
+    long_reflection:
+      "Tuhan memiliki rencana terbaik untuk hidup kita. Meskipun kadang kita tidak memahami prosesnya, kita dapat percaya bahwa Dia membawa kita menuju masa depan yang penuh harapan.",
     date: dateKey,
     generated_at: new Date().toISOString(),
   };
@@ -156,20 +161,20 @@ function getFallbackVerse(dateKey: string): DailyVerseData {
 function cleanOldCache(): void {
   const today = getTodayWIBDateKey();
   const keysToDelete: string[] = [];
-  
+
   for (const [key, verse] of verseCache.entries()) {
     // Hapus cache yang lebih dari 2 hari
     if (verse.date !== today) {
       const verseDate = new Date(verse.date);
       const todayDate = new Date(today);
       const diffDays = Math.floor((todayDate.getTime() - verseDate.getTime()) / (1000 * 60 * 60 * 24));
-      
+
       if (diffDays > 1) {
         keysToDelete.push(key);
       }
     }
   }
-  
+
   keysToDelete.forEach(key => verseCache.delete(key));
 }
 
@@ -281,7 +286,7 @@ export async function POST(
     }
 
     const dateKey = getTodayWIBDateKey();
-    
+
     // Hapus cache untuk tanggal ini
     verseCache.delete(dateKey);
 
