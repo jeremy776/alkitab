@@ -6,12 +6,13 @@ import Link from "next/link";
 
 const navItems = [
   { href: "/", label: "Home" },
+  { href: "/refleksi/hari-ini", label: "Ayat Harian" },
   { href: "/quiz", label: "Quiz" },
 ];
 
 const mobileNavItems = [
+  { href: "/refleksi/hari-ini", label: "Ayat Harian" },
   { href: "/features", label: "Features" },
-  { href: "/daily-verse", label: "Ayat Harian" },
   { href: "/templates", label: "Templates" },
   { href: "/resources", label: "Resources" },
   { href: "/about", label: "About" },

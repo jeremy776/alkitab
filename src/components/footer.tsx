@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="bg-white border-t border-gray-200 pt-16 pb-10 px-6">
+    <footer className="bg-white pt-16 pb-10 px-6">
       <div className="max-w-7xl mx-auto grid-cols-2 grid lg:grid-cols-5 gap-12">
         <div className="col-span-2">
           <h2 className="text-xl font-bold text-gray-900 mb-2">SelaVibes</h2>
@@ -19,7 +19,7 @@ export default function Footer() {
           </h4>
           <ul className="space-y-2 text-sm text-gray-600">
             <li>
-              <Link href="/ayat-harian" className="hover:text-indigo-600">Daily Verse</Link>
+              <Link href="/refleksi/hari-ini" className="hover:text-indigo-600">Daily Verse</Link>
             </li>
             <li>
               <Link href="/christian-music" className="hover:text-indigo-600">Christian Music</Link>
@@ -39,13 +39,10 @@ export default function Footer() {
           </h4>
           <ul className="space-y-2 text-sm text-gray-600">
             <li>
-              <Link href="/about" className="hover:text-indigo-600">About Us</Link>
+              <Link href="/about-us" className="hover:text-indigo-600">About Us</Link>
             </li>
             <li>
-              <button className="hover:text-indigo-600">Careers</button>
-            </li>
-            <li>
-              <button className="hover:text-indigo-600">Team</button>
+              <Link href='/teams' className="hover:text-indigo-600">Team</Link>
             </li>
             <li>
               <Link href="/contact" className="hover:text-indigo-600">Contact Us</Link>
