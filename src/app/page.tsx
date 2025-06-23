@@ -14,7 +14,6 @@ export default function TurboBuilderPage() {
       element.scrollIntoView({ behavior: "smooth" });
     }
   };
-
   return (
     <div className="bg-white">
       {/* Navigation */}

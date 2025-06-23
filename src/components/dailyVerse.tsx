@@ -22,6 +22,7 @@ interface ApiResponse {
   meta?: {
     cached: boolean;
     seed: string;
+    next_update?: string;
   };
 }
 
@@ -38,7 +39,8 @@ export default function DailyVerse() {
   const [loading, setLoading] = useState(true);
   const [isAutoCallEnabled, setIsAutoCallEnabled] = useState(true);
   const [hasInitialLoad, setHasInitialLoad] = useState(false);
-  const [todayVerseDate, setTodayVerseDate] = useState<string | null>(null);
+  const [currentVerseDate, setCurrentVerseDate] = useState<string | null>(null);
+  const [nextUpdate, setNextUpdate] = useState<string | null>(null);
   const [isCopied, setIsCopied] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
 
@@ -64,23 +66,52 @@ export default function DailyVerse() {
     }
   };
 
-  const shouldAutoCall = () => {
+  // Fungsi untuk mendapatkan tanggal hari ini dalam format WIB
+  const getWIBDateKey = (): string => {
     const now = new Date();
-    const currentHour = now.getHours();
-    const today = now.toDateString();
+    const wibTime = new Date(now.getTime() + 7 * 60 * 60 * 1000);
+    
+    // Jika waktu sekarang belum jam 6 pagi WIB, gunakan tanggal kemarin
+    if (wibTime.getUTCHours() < 6) {
+      wibTime.setUTCDate(wibTime.getUTCDate() - 1);
+    }
 
-    return currentHour >= 6 && lastAutoCallDate !== today && isAutoCallEnabled;
+    const year = wibTime.getUTCFullYear();
+    const month = String(wibTime.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(wibTime.getUTCDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
   };
 
-  const shouldLoadTodayVerse = () => {
-    const today = new Date().toDateString();
-    return todayVerseDate !== today;
+  // Fungsi untuk mengecek apakah sudah saatnya auto call (jam 6 pagi WIB)
+  const shouldAutoCall = (): boolean => {
+    const now = new Date();
+    const wibTime = new Date(now.getTime() + 7 * 60 * 60 * 1000);
+    const currentHour = wibTime.getUTCHours();
+    const currentMinute = wibTime.getUTCMinutes();
+    const todayWIB = getWIBDateKey();
+
+    // Auto call jika sudah lewat jam 6 pagi WIB dan belum pernah auto call hari ini
+    return (
+      currentHour >= 6 && 
+      lastAutoCallDate !== todayWIB && 
+      isAutoCallEnabled
+    );
+  };
+
+  // Fungsi untuk mengecek apakah verse yang tersimpan masih valid untuk hari ini
+  const isStoredVerseValid = (storedVerse: VerseData | null): boolean => {
+    if (!storedVerse || !storedVerse.date) return false;
+    
+    const todayWIB = getWIBDateKey();
+    return storedVerse.date === todayWIB;
   };
 
   const callVerseAPI = async (isAutoCall = false, isInitialLoad = false) => {
     if (loading && !isInitialLoad) return;
 
     const today = new Date().toDateString();
+    const todayWIB = getWIBDateKey();
 
     if (
       apiCallCount >= 5 &&
@@ -115,14 +146,28 @@ export default function DailyVerse() {
         };
 
         setCurrentVerse(verseData);
+        setCurrentVerseDate(result.data.date);
 
-        setStorageData("todayVerse", verseData);
-        setStorageData("todayVerseDate", new Date().toDateString());
-        setTodayVerseDate(new Date().toDateString());
+        // Simpan verse dengan key berdasarkan tanggal verse
+        setStorageData(`verse_${result.data.date}`, verseData);
+        setStorageData("lastVerseDate", result.data.date);
+
+        // Simpan informasi next update jika ada
+        if (result.meta?.next_update) {
+          setNextUpdate(result.meta.next_update);
+          setStorageData("nextUpdate", result.meta.next_update);
+        }
+
+        console.log("Verse loaded:", {
+          date: result.data.date,
+          cached: result.meta?.cached || false,
+          nextUpdate: result.meta?.next_update
+        });
       } else {
         throw new Error(result.error || "API request failed");
       }
 
+      // Update call count hanya untuk manual calls
       if (!isInitialLoad) {
         const newCount = lastCallDate === today ? apiCallCount + 1 : 1;
         setApiCallCount(newCount);
@@ -131,9 +176,10 @@ export default function DailyVerse() {
         setStorageData("lastCallDate", today);
       }
 
+      // Update auto call date
       if (isAutoCall) {
-        setLastAutoCallDate(today);
-        setStorageData("lastAutoCallDate", today);
+        setLastAutoCallDate(todayWIB);
+        setStorageData("lastAutoCallDate", todayWIB);
       }
     } catch (error) {
       console.error("Error calling API:", error);
@@ -153,12 +199,16 @@ export default function DailyVerse() {
   useEffect(() => {
     const initializeAndLoadVerse = async () => {
       const today = new Date().toDateString();
+      const todayWIB = getWIBDateKey();
+      
+      // Load stored data
       const storedCount = getStorageData("apiCallCount", 0);
       const storedDate = getStorageData("lastCallDate", null);
       const storedAutoCallDate = getStorageData("lastAutoCallDate", null);
-      const storedVerseDate = getStorageData("todayVerseDate", null);
-      const storedVerse = getStorageData("todayVerse", null);
-
+      const storedNextUpdate = getStorageData("nextUpdate", null);
+      const lastVerseDate = getStorageData("lastVerseDate", null);
+      
+      // Reset call count jika sudah ganti hari
       if (storedDate !== today) {
         setApiCallCount(0);
         setStorageData("apiCallCount", 0);
@@ -169,15 +219,19 @@ export default function DailyVerse() {
 
       setLastCallDate(storedDate);
       setLastAutoCallDate(storedAutoCallDate);
-      setTodayVerseDate(storedVerseDate);
+      setNextUpdate(storedNextUpdate);
 
-      if (storedVerseDate === today && storedVerse) {
-        console.log("Loading saved verse for today");
+      // Coba load verse yang tersimpan untuk hari ini
+      const storedVerse = getStorageData(`verse_${todayWIB}`, null);
+      
+      if (isStoredVerseValid(storedVerse)) {
+        console.log("Loading cached verse for:", todayWIB);
         setCurrentVerse(storedVerse);
+        setCurrentVerseDate(storedVerse.date);
         setLoading(false);
         setHasInitialLoad(true);
       } else {
-        console.log("Loading new verse for today");
+        console.log("Loading new verse for:", todayWIB);
         if (!hasInitialLoad) {
           await callVerseAPI(false, true);
           setHasInitialLoad(true);
@@ -192,18 +246,19 @@ export default function DailyVerse() {
     if (!hasInitialLoad) return;
 
     const checkAutoCall = () => {
-      if (shouldAutoCall() && shouldLoadTodayVerse()) {
-        console.log("Auto calling API at 6 AM for new day");
+      if (shouldAutoCall()) {
+        console.log("Auto calling API at 6 AM WIB for new day");
         callVerseAPI(true);
       }
     };
 
     checkAutoCall();
 
+    // Check setiap menit
     const interval = setInterval(checkAutoCall, 60000);
 
     return () => clearInterval(interval);
-  }, [lastAutoCallDate, isAutoCallEnabled, hasInitialLoad, todayVerseDate]);
+  }, [lastAutoCallDate, isAutoCallEnabled, hasInitialLoad]);
 
   const handleSaveVerse = () => {
     alert("Ayat berhasil disimpan! 💾");
@@ -258,11 +313,29 @@ ${window.location.href}`;
     const today = new Date().toDateString();
     if (apiCallCount >= 5 && lastCallDate === today) {
       alert(
-        "Limit harian sudah tercapai (5x). Ayat akan otomatis berganti besok jam 6 pagi! 😊"
+        "Limit harian sudah tercapai (5x). Ayat akan otomatis berganti besok jam 6 pagi WIB! 😊"
       );
       return;
     }
     callVerseAPI(false);
+  };
+
+  // Format next update time untuk display
+  const formatNextUpdate = (dateString: string): string => {
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleString("id-ID", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZoneName: "short"
+      });
+    } catch {
+      return "Besok jam 6 pagi WIB";
+    }
   };
 
   const today = new Date().toDateString();
@@ -324,15 +397,29 @@ ${window.location.href}`;
           )}
 
           <div className="mt-6 pt-6 border-t border-gray-100">
-            <p className="text-sm text-gray-500">
-              📅{" "}
-              {new Date().toLocaleDateString("id-ID", {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </p>
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-2 text-sm text-gray-500">
+              <p>
+                📅 {currentVerseDate ? 
+                  new Date(currentVerseDate).toLocaleDateString("id-ID", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  }) :
+                  new Date().toLocaleDateString("id-ID", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })
+                }
+              </p>
+              {nextUpdate && (
+                <p className="text-xs text-indigo-600">
+                  🔄 Update berikutnya: {formatNextUpdate(nextUpdate)}
+                </p>
+              )}
+            </div>
           </div>
         </div>
 
@@ -427,7 +514,7 @@ ${window.location.href}`;
               Update Otomatis
             </h4>
             <p className="text-sm text-gray-600">
-              Ayat berganti otomatis setiap hari jam 6 pagi
+              Ayat berganti otomatis setiap hari jam 6 pagi WIB
             </p>
           </div>
           <div className="bg-white/60 backdrop-blur-sm rounded-xl p-4 border border-white/50 hover:bg-white/80 transition-all duration-200">
