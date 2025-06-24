@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createClient } from "@/lib/supabase/client";
 
 interface VerseData {
   text: string;
@@ -37,12 +38,16 @@ export default function DailyVerse() {
   const [lastCallDate, setLastCallDate] = useState<string | null>(null);
   const [lastAutoCallDate, setLastAutoCallDate] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [isAutoCallEnabled, setIsAutoCallEnabled] = useState(true);
   const [hasInitialLoad, setHasInitialLoad] = useState(false);
   const [currentVerseDate, setCurrentVerseDate] = useState<string | null>(null);
   const [nextUpdate, setNextUpdate] = useState<string | null>(null);
   const [isCopied, setIsCopied] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+
+  const supabase = createClient();
 
   const getStorageData = (key: string, defaultValue: any) => {
     try {
@@ -70,7 +75,7 @@ export default function DailyVerse() {
   const getWIBDateKey = (): string => {
     const now = new Date();
     const wibTime = new Date(now.getTime() + 7 * 60 * 60 * 1000);
-    
+
     // Jika waktu sekarang belum jam 6 pagi WIB, gunakan tanggal kemarin
     if (wibTime.getUTCHours() < 6) {
       wibTime.setUTCDate(wibTime.getUTCDate() - 1);
@@ -88,27 +93,28 @@ export default function DailyVerse() {
     const now = new Date();
     const wibTime = new Date(now.getTime() + 7 * 60 * 60 * 1000);
     const currentHour = wibTime.getUTCHours();
-    const currentMinute = wibTime.getUTCMinutes();
     const todayWIB = getWIBDateKey();
 
     // Auto call jika sudah lewat jam 6 pagi WIB dan belum pernah auto call hari ini
     return (
-      currentHour >= 6 && 
-      lastAutoCallDate !== todayWIB && 
-      isAutoCallEnabled
+      currentHour >= 6 && lastAutoCallDate !== todayWIB && isAutoCallEnabled
     );
   };
 
   // Fungsi untuk mengecek apakah verse yang tersimpan masih valid untuk hari ini
   const isStoredVerseValid = (storedVerse: VerseData | null): boolean => {
     if (!storedVerse || !storedVerse.date) return false;
-    
+
     const todayWIB = getWIBDateKey();
     return storedVerse.date === todayWIB;
   };
 
-  const callVerseAPI = async (isAutoCall = false, isInitialLoad = false) => {
-    if (loading && !isInitialLoad) return;
+  const callVerseAPI = async (
+    isAutoCall = false,
+    isInitialLoad = false,
+    forceRefresh = false
+  ) => {
+    if (loading && !isInitialLoad && !forceRefresh) return;
 
     const today = new Date().toDateString();
     const todayWIB = getWIBDateKey();
@@ -117,22 +123,27 @@ export default function DailyVerse() {
       apiCallCount >= 5 &&
       lastCallDate === today &&
       !isAutoCall &&
-      !isInitialLoad
+      !isInitialLoad &&
+      !forceRefresh
     ) {
-      alert("Limit harian sudah tercapai (5x). Coba lagi besok ya! 😊");
+      setError("Limit harian sudah tercapai (5x). Coba lagi besok ya! 😊");
       return;
     }
 
     if (!isInitialLoad) {
       setLoading(true);
+      setError(null);
     }
 
     try {
       const response = await fetch("/api/daily-verse", {
-        method: "GET",
+        method: forceRefresh ? "POST" : "GET",
         headers: {
           "Content-Type": "application/json",
         },
+        ...(forceRefresh && {
+          body: JSON.stringify({ forceRefresh: true }),
+        }),
       });
 
       const result: ApiResponse = await response.json();
@@ -147,6 +158,7 @@ export default function DailyVerse() {
 
         setCurrentVerse(verseData);
         setCurrentVerseDate(result.data.date);
+        setError(null);
 
         // Simpan verse dengan key berdasarkan tanggal verse
         setStorageData(`verse_${result.data.date}`, verseData);
@@ -161,14 +173,14 @@ export default function DailyVerse() {
         console.log("Verse loaded:", {
           date: result.data.date,
           cached: result.meta?.cached || false,
-          nextUpdate: result.meta?.next_update
+          nextUpdate: result.meta?.next_update,
         });
       } else {
         throw new Error(result.error || "API request failed");
       }
 
       // Update call count hanya untuk manual calls
-      if (!isInitialLoad) {
+      if (!isInitialLoad && !isAutoCall) {
         const newCount = lastCallDate === today ? apiCallCount + 1 : 1;
         setApiCallCount(newCount);
         setLastCallDate(today);
@@ -183,6 +195,11 @@ export default function DailyVerse() {
       }
     } catch (error) {
       console.error("Error calling API:", error);
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Terjadi kesalahan saat memuat ayat harian";
+      setError(errorMessage);
 
       if (isInitialLoad) {
         setCurrentVerse({
@@ -200,14 +217,13 @@ export default function DailyVerse() {
     const initializeAndLoadVerse = async () => {
       const today = new Date().toDateString();
       const todayWIB = getWIBDateKey();
-      
+
       // Load stored data
       const storedCount = getStorageData("apiCallCount", 0);
       const storedDate = getStorageData("lastCallDate", null);
       const storedAutoCallDate = getStorageData("lastAutoCallDate", null);
       const storedNextUpdate = getStorageData("nextUpdate", null);
-      const lastVerseDate = getStorageData("lastVerseDate", null);
-      
+
       // Reset call count jika sudah ganti hari
       if (storedDate !== today) {
         setApiCallCount(0);
@@ -223,7 +239,7 @@ export default function DailyVerse() {
 
       // Coba load verse yang tersimpan untuk hari ini
       const storedVerse = getStorageData(`verse_${todayWIB}`, null);
-      
+
       if (isStoredVerseValid(storedVerse)) {
         console.log("Loading cached verse for:", todayWIB);
         setCurrentVerse(storedVerse);
@@ -260,8 +276,27 @@ export default function DailyVerse() {
     return () => clearInterval(interval);
   }, [lastAutoCallDate, isAutoCallEnabled, hasInitialLoad]);
 
-  const handleSaveVerse = () => {
-    alert("Ayat berhasil disimpan! 💾");
+  const handleSaveVerse = async () => {
+    if (!currentVerse.text) return;
+
+    try {
+      // Simpan ke localStorage sebagai favorit
+      const savedVerses = getStorageData("savedVerses", []);
+      const verseToSave = {
+        ...currentVerse,
+        savedAt: new Date().toISOString(),
+        id: `verse_${currentVerse.date}_${Date.now()}`,
+      };
+
+      if (!savedVerses.some((v: any) => v.date === currentVerse.date)) {
+        savedVerses.push(verseToSave);
+        setStorageData("savedVerses", savedVerses);
+        setIsSaved(true);
+        setTimeout(() => setIsSaved(false), 2000);
+      }
+    } catch (error) {
+      console.error("Error saving verse:", error);
+    }
   };
 
   const handleShareVerse = async () => {
@@ -302,12 +337,22 @@ ${window.location.href}`;
         setTimeout(() => setIsCopied(false), 2000);
       } catch (clipboardError) {
         console.error("Clipboard access failed:", clipboardError);
-        alert("Maaf, fitur share tidak tersedia di browser ini 😔");
+        setError("Maaf, fitur share tidak tersedia di browser ini 😔");
       }
     } finally {
       setIsSharing(false);
     }
   };
+
+  const handleRefreshVerse = () => {
+    callVerseAPI(false, false, true);
+  };
+
+  const handleRetry = () => {
+    setError(null);
+    callVerseAPI(false, false, true);
+  };
+
   // Format next update time untuk display
   const formatNextUpdate = (dateString: string): string => {
     try {
@@ -319,7 +364,7 @@ ${window.location.href}`;
         day: "numeric",
         hour: "2-digit",
         minute: "2-digit",
-        timeZoneName: "short"
+        timeZoneName: "short",
       });
     } catch {
       return "Besok jam 6 pagi WIB";
@@ -349,6 +394,34 @@ ${window.location.href}`;
             Simple tapi dalem maknanya 💙
           </p>
         </div>
+
+        {/* Error Display */}
+        {error && (
+          <div className="mb-8 bg-red-50 border border-red-200 rounded-lg p-4">
+            <div className="flex items-center">
+              <svg
+                className="w-5 h-5 text-red-500 mr-3"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+                />
+              </svg>
+              <p className="text-red-700 text-sm">{error}</p>
+            </div>
+            <button
+              onClick={handleRetry}
+              className="mt-3 text-red-700 hover:text-red-900 text-sm font-medium underline"
+            >
+              Coba Lagi
+            </button>
+          </div>
+        )}
 
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-indigo-100 to-transparent rounded-full -mr-16 -mt-16"></div>
@@ -387,20 +460,20 @@ ${window.location.href}`;
           <div className="mt-6 pt-6 border-t border-gray-100">
             <div className="flex flex-col sm:flex-row justify-between items-center gap-2 text-sm text-gray-500">
               <p>
-                📅 {currentVerseDate ? 
-                  new Date(currentVerseDate).toLocaleDateString("id-ID", {
-                    weekday: "long",
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  }) :
-                  new Date().toLocaleDateString("id-ID", {
-                    weekday: "long",
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })
-                }
+                📅{" "}
+                {currentVerseDate
+                  ? new Date(currentVerseDate).toLocaleDateString("id-ID", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })
+                  : new Date().toLocaleDateString("id-ID", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
               </p>
               {nextUpdate && (
                 <p className="text-xs text-indigo-600">
@@ -411,6 +484,7 @@ ${window.location.href}`;
           </div>
         </div>
 
+        {/* Success Notifications */}
         {isCopied && (
           <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-pulse">
             <div className="flex items-center gap-2">
@@ -418,6 +492,15 @@ ${window.location.href}`;
               <span className="font-medium">
                 Ayat berhasil disalin ke clipboard!
               </span>
+            </div>
+          </div>
+        )}
+
+        {isSaved && (
+          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-blue-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-pulse">
+            <div className="flex items-center gap-2">
+              <span className="text-xl">💾</span>
+              <span className="font-medium">Ayat berhasil disimpan!</span>
             </div>
           </div>
         )}
@@ -444,7 +527,7 @@ ${window.location.href}`;
             }`}
           >
             <span>💾</span>
-            Simpan Ayat Ini
+            {isSaved ? "Tersimpan!" : "Simpan Ayat Ini"}
           </button>
 
           <button
@@ -474,6 +557,27 @@ ${window.location.href}`;
             )}
           </button>
 
+          <button
+            onClick={handleRefreshVerse}
+            disabled={loading || !canCallAPI}
+            className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 ${
+              loading || !canCallAPI
+                ? "border border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed"
+                : "border border-purple-200 hover:border-purple-300 bg-white hover:bg-purple-50 text-purple-600 hover:scale-105 active:scale-95"
+            }`}
+          >
+            {loading ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-2 border-purple-600 border-t-transparent"></div>
+                <span>Memuat...</span>
+              </>
+            ) : (
+              <>
+                <span>🔄</span>
+                <span>Refresh Ayat</span>
+              </>
+            )}
+          </button>
         </div>
 
         <div className="mt-12 grid sm:grid-cols-3 gap-6 text-center">

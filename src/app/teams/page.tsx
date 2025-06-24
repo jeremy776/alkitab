@@ -2,6 +2,7 @@
 import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
 import React, { useState } from "react";
+import Image from "next/image";
 
 const TeamsPage = () => {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
@@ -10,11 +11,14 @@ const TeamsPage = () => {
     {
       id: 1,
       name: "Jeremy",
+      displayName: "Jeremy",
       role: "Frontend Developer",
       description:
         "Spesialis dalam pengembangan antarmuka pengguna yang responsif dan interaktif. Berpengalaman dalam React, Next.js, dan teknologi frontend modern.",
       skills: ["React", "Next.js", "TypeScript", "Tailwind CSS"],
       experience: "5+ tahun",
+      photo: "/developer/jeremy.jpg", // atau .png sesuai format file
+      badges: ["Frontend"],
       icon: (
         <svg
           className="w-8 h-8"
@@ -35,11 +39,14 @@ const TeamsPage = () => {
     {
       id: 2,
       name: "Angga",
+      displayName: "Angga",
       role: "Backend Developer",
       description:
         "Ahli dalam pengembangan server-side dan arsitektur sistem. Menguasai berbagai teknologi backend dan database management.",
-      skills: ["Node.js", "Express", "MongoDB"],
+      skills: ["Node.js", "Express", "MongoDB", "PostgreSQL", "Docker"],
       experience: "6+ tahun",
+      photo: "/developer/angga.jpg", // atau .png sesuai format file
+      badges: ["Backend", "DevOps"],
       icon: (
         <svg
           className="w-8 h-8"
@@ -60,11 +67,14 @@ const TeamsPage = () => {
     {
       id: 3,
       name: "Wahyu",
+      displayName: "Wahyu",
       role: "UI/UX Designer",
       description:
         "Desainer berpengalaman yang fokus pada user experience dan visual design. Menciptakan antarmuka yang intuitif dan menarik secara visual.",
-      skills: ["Figma"],
+      skills: ["Figma", "Adobe XD", "Photoshop", "User Research"],
       experience: "4+ tahun",
+      photo: "/developer/wahyu.jpg", // atau .png sesuai format file
+      badges: ["UI/UX", "Design"],
       icon: (
         <svg
           className="w-8 h-8"
@@ -83,6 +93,17 @@ const TeamsPage = () => {
       gradient: "from-green-500 to-blue-500",
     },
   ];
+
+  const getBadgeColor = (badge: string) => {
+    const badgeColors: { [key: string]: string } = {
+      Frontend: "bg-blue-100 text-blue-700 border-blue-200",
+      Backend: "bg-purple-100 text-purple-700 border-purple-200",
+      "UI/UX": "bg-green-100 text-green-700 border-green-200",
+      Design: "bg-pink-100 text-pink-700 border-pink-200",
+      DevOps: "bg-orange-100 text-orange-700 border-orange-200",
+    };
+    return badgeColors[badge] || "bg-gray-100 text-gray-700 border-gray-200";
+  };
 
   return (
     <>
@@ -210,17 +231,57 @@ const TeamsPage = () => {
                 >
                   {/* Profile Header */}
                   <div className="text-center mb-6">
-                    <div
-                      className={`inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br ${
-                        member.gradient
-                      } rounded-full mb-4 text-white transition-transform duration-300 ${
-                        hoveredCard === member.id ? "scale-110" : ""
-                      }`}
-                    >
-                      {member.icon}
+                    {/* Profile Photo */}
+                    <div className="relative mb-4">
+                      <div
+                        className={`relative w-24 h-24 mx-auto rounded-full overflow-hidden border-4 border-gradient-to-br ${
+                          member.gradient
+                        } transition-transform duration-300 ${
+                          hoveredCard === member.id ? "scale-110" : ""
+                        }`}
+                      >
+                        <Image
+                          src={member.photo}
+                          alt={member.displayName}
+                          fill
+                          className="object-cover"
+                          sizes="96px"
+                          onError={(e) => {
+                            // Fallback to icon if image fails to load
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = "none";
+                          }}
+                        />
+                      </div>
+                      {/* Fallback Icon (if image fails) */}
+                      <div
+                        className={`absolute inset-0 w-24 h-24 mx-auto bg-gradient-to-br ${
+                          member.gradient
+                        } rounded-full flex items-center justify-center text-white transition-transform duration-300 ${
+                          hoveredCard === member.id ? "scale-110" : ""
+                        }`}
+                        style={{ zIndex: -1 }}
+                      >
+                        {member.icon}
+                      </div>
                     </div>
+
+                    {/* Badges */}
+                    <div className="flex flex-wrap justify-center gap-2 mb-4">
+                      {member.badges.map((badge, badgeIndex) => (
+                        <span
+                          key={badgeIndex}
+                          className={`px-3 py-1 text-xs font-semibold rounded-full border ${getBadgeColor(
+                            badge
+                          )}`}
+                        >
+                          {badge}
+                        </span>
+                      ))}
+                    </div>
+
                     <h3 className="text-2xl font-bold text-gray-900 mb-1">
-                      {member.name}
+                      {member.displayName}
                     </h3>
                     <p
                       className={`text-lg font-semibold bg-gradient-to-r ${member.gradient} bg-clip-text text-transparent`}

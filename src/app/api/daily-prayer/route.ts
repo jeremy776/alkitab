@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { createClient } from "@/lib/supabase/server";
 
 interface DailyPrayData {
   prayer: string;
@@ -17,49 +18,82 @@ interface ApiResponse {
   meta?: {
     cached: boolean;
     seed: string;
+    next_update?: string;
   };
 }
 
-const prayCache = new Map<string, DailyPrayData>();
-
 const API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
-
 const genAI = new GoogleGenerativeAI(API_KEY || "");
 
-function getTodayWIBDateKey(): string {
+function getWIBTime(): Date {
   const now = new Date();
-  const wibTime = new Date(now.getTime() + 7 * 60 * 60 * 1000);
+  return new Date(now.getTime() + 7 * 60 * 60 * 1000);
+}
 
+function getCurrentWIBPeriod(): string {
+  const wibTime = getWIBTime();
   const year = wibTime.getUTCFullYear();
   const month = String(wibTime.getUTCMonth() + 1).padStart(2, "0");
   const day = String(wibTime.getUTCDate()).padStart(2, "0");
+  const hour = wibTime.getUTCHours();
 
-  return `${year}-${month}-${day}-06:00:00-WIB`;
+  // Periode dimulai jam 6 pagi
+  if (hour >= 6) {
+    return `${year}-${month}-${day}`;
+  } else {
+    // Jika belum jam 6 pagi, masih periode hari sebelumnya
+    const yesterday = new Date(wibTime.getTime() - 24 * 60 * 60 * 1000);
+    return `${yesterday.getUTCFullYear()}-${String(
+      yesterday.getUTCMonth() + 1
+    ).padStart(2, "0")}-${String(yesterday.getUTCDate()).padStart(2, "0")}`;
+  }
 }
 
-function generateDeterministicSeed(dateKey: string): string {
-  return crypto.createHash("md5").update(dateKey).digest("hex");
+function getNextUpdateTime(): string {
+  const wibTime = getWIBTime();
+  let nextUpdate = new Date(wibTime);
+
+  // Set ke jam 6 pagi hari ini
+  nextUpdate.setUTCHours(6, 0, 0, 0);
+
+  // Jika sudah lewat jam 6 pagi, set ke jam 6 pagi besok
+  if (wibTime.getUTCHours() >= 6) {
+    nextUpdate.setUTCDate(nextUpdate.getUTCDate() + 1);
+  }
+
+  // Convert back to local time untuk display
+  return new Date(nextUpdate.getTime() - 7 * 60 * 60 * 1000).toISOString();
+}
+
+function generateDeterministicSeed(period: string): string {
+  return crypto
+    .createHash("md5")
+    .update(period + "-daily-prayer-06:00-WIB")
+    .digest("hex");
 }
 
 async function generatePrayWithAI(
   seed: string,
-  dateKey: string
+  date: string
 ): Promise<DailyPrayData> {
   const prompt = `Kamu adalah seorang pendeta yang berpengalaman dan memahami Alkitab dengan baik. 
 
-Buatkan satu doa untuk memulai, menjalankan atau menghadapi hari ini pada tanggal ${
-    dateKey.split("-06:00:00-WIB")[0]
-  } dengan seed: ${seed.substring(0, 8)}.
+Buatkan satu doa untuk memulai, menjalankan atau menghadapi hari ini pada tanggal ${date} dengan seed: ${seed.substring(
+    0,
+    8
+  )}.
 
 Syarat:
-1. Berikan teks ayat dalam bahasa Indonesia
+1. Berikan doa dalam bahasa Indonesia
+2. Doa yang dapat bermanfaat bagi pembaca
+3. Jangan memasukkan tanggal ke dalam doa
 
 Format response dalam JSON:
 {
-  "prayer": "Doa nya disini",
+  "prayer": "Doa nya disini"
 }
 
-Pastikan doa yang diberikan dapat bermanfaat bagi pembaca. jangan memasukan tanggal kedalam nya`;
+Pastikan doa yang diberikan dapat bermanfaat bagi pembaca.`;
 
   const model = genAI.getGenerativeModel({
     model: "gemini-1.5-flash",
@@ -82,20 +116,76 @@ Pastikan doa yang diberikan dapat bermanfaat bagi pembaca. jangan memasukan tang
 
   return {
     prayer: parsedResponse.prayer,
-    date: dateKey.split("-06:00:00-WIB")[0],
+    date: date,
     generated_at: new Date().toISOString(),
   };
 }
 
-function getFallbackVerse(dateKey: string): DailyPrayData {
+function getFallbackPrayer(date: string): DailyPrayData {
   return {
-    prayer: "Sebab Aku ini mengetahui rancangan-rancangan apa yang ada pada-Ku mengenai kamu, demikianlah firman TUHAN, yaitu rancangan damai sejahtera dan bukan rancangan kecelakaan, untuk memberikan kepadamu hari depan yang penuh harapan.",
-    date: dateKey.split("-06:00:00-WIB")[0],
+    prayer:
+      "Tuhan Yesus, terima kasih atas hari yang Engkau berikan. Berkatilah setiap langkah yang akan kami ambil hari ini. Pimpinlah kami dalam jalan yang benar dan berikan kami kekuatan untuk menghadapi setiap tantangan. Dalam nama Yesus kami berdoa. Amin.",
+    date: date,
     generated_at: new Date().toISOString(),
   };
 }
 
-export async function GET(): Promise<NextResponse<ApiResponse>> {
+async function getOrCreateDailyPrayer(
+  request: NextRequest,
+  period: string
+): Promise<DailyPrayData> {
+  const supabase = await createClient();
+
+  try {
+    // Cek apakah sudah ada doa untuk periode ini
+    const { data: existingPrayer, error: fetchError } = await supabase
+      .from("daily_prayers")
+      .select("*")
+      .eq("date", period)
+      .single();
+
+    if (existingPrayer && !fetchError) {
+      return {
+        prayer: existingPrayer.prayer,
+        date: existingPrayer.date,
+        generated_at: existingPrayer.created_at,
+      };
+    }
+
+    // Generate doa baru jika belum ada
+    const seed = generateDeterministicSeed(period);
+    let prayer: DailyPrayData;
+
+    try {
+      prayer = await generatePrayWithAI(seed, period);
+    } catch (error) {
+      console.error("AI generation failed, using fallback:", error);
+      prayer = getFallbackPrayer(period);
+    }
+
+    // Simpan ke database
+    const { error: insertError } = await supabase.from("daily_prayers").insert({
+      date: prayer.date,
+      prayer: prayer.prayer,
+      seed: seed,
+    });
+
+    if (insertError) {
+      console.error("Failed to save prayer to database:", insertError);
+      // Tetap return prayer meskipun gagal save ke DB
+    }
+
+    return prayer;
+  } catch (error) {
+    console.error("Database error:", error);
+    // Fallback jika ada masalah dengan database
+    return getFallbackPrayer(period);
+  }
+}
+
+export async function GET(
+  request: NextRequest
+): Promise<NextResponse<ApiResponse>> {
   try {
     if (!API_KEY) {
       return NextResponse.json<ApiResponse>(
@@ -109,53 +199,22 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
       );
     }
 
-    const dateKey = getTodayWIBDateKey();
-
-    if (prayCache.has(dateKey)) {
-      const cachedPray = prayCache.get(dateKey)!;
-      return NextResponse.json<ApiResponse>({
-        status_code: 200,
-        success: true,
-        message: "Daily pray retrieved successfully",
-        data: cachedPray,
-        meta: {
-          cached: true,
-          seed: generateDeterministicSeed(dateKey).substring(0, 8),
-        },
-      });
-    }
-
-    const seed = generateDeterministicSeed(dateKey);
-    let pray: DailyPrayData;
-
-    try {
-      pray = await generatePrayWithAI(seed, dateKey);
-    } catch (error) {
-      console.error("AI generation failed, using fallback:", error);
-      pray = getFallbackVerse(dateKey);
-    }
-
-    prayCache.set(dateKey, pray);
-
-    if (prayCache.size > 7) {
-      const oldestKey = prayCache.keys().next().value;
-      if (typeof oldestKey === "string") {
-        prayCache.delete(oldestKey);
-      }
-    }
+    const currentPeriod = getCurrentWIBPeriod();
+    const prayer = await getOrCreateDailyPrayer(request, currentPeriod);
 
     return NextResponse.json<ApiResponse>({
       status_code: 200,
       success: true,
-      message: "Daily verse generated successfully",
-      data: pray,
+      message: "Daily prayer retrieved successfully",
+      data: prayer,
       meta: {
-        cached: false,
-        seed: seed.substring(0, 8),
+        cached: true,
+        seed: generateDeterministicSeed(currentPeriod).substring(0, 8),
+        next_update: getNextUpdateTime(),
       },
     });
   } catch (error) {
-    console.error("Daily verse API error:", error);
+    console.error("Daily prayer API error:", error);
 
     return NextResponse.json<ApiResponse>(
       {
@@ -201,33 +260,28 @@ export async function POST(
       );
     }
 
-    const dateKey = getTodayWIBDateKey();
-    prayCache.delete(dateKey);
+    const supabase = await createClient();
+    const currentPeriod = getCurrentWIBPeriod();
 
-    const seed = generateDeterministicSeed(dateKey);
-    let verse: DailyPrayData;
+    // Hapus doa yang sudah ada untuk periode ini
+    await supabase.from("daily_prayers").delete().eq("date", currentPeriod);
 
-    try {
-      verse = await generatePrayWithAI(seed, dateKey);
-    } catch (error) {
-      console.error("AI generation failed, using fallback:", error);
-      verse = getFallbackVerse(dateKey);
-    }
-
-    prayCache.set(dateKey, verse);
+    // Generate doa baru
+    const prayer = await getOrCreateDailyPrayer(request, currentPeriod);
 
     return NextResponse.json<ApiResponse>({
       status_code: 200,
       success: true,
-      message: "Daily Prayer refreshed successfully",
-      data: verse,
+      message: "Daily prayer refreshed successfully",
+      data: prayer,
       meta: {
         cached: false,
-        seed: seed.substring(0, 8),
+        seed: generateDeterministicSeed(currentPeriod).substring(0, 8),
+        next_update: getNextUpdateTime(),
       },
     });
   } catch (error) {
-    console.error("Daily verse POST error:", error);
+    console.error("Daily prayer POST error:", error);
 
     return NextResponse.json<ApiResponse>(
       {
