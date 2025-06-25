@@ -94,7 +94,6 @@ export default function Navbar() {
       window.location.replace("/?t=" + Date.now());
     }
   };
-
   // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -118,7 +117,7 @@ export default function Navbar() {
   }, []);
 
   // Show loading state with better handling
-  if (!mounted || (loading && !user && !loadingTimeout)) {
+  if (!mounted || (loading && !user)) {
     return (
       <nav className="bg-white/80 backdrop-blur-md py-4 px-6 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -126,31 +125,18 @@ export default function Navbar() {
             <Image
               src="/logo.png"
               className="rounded-xl"
-              alt="SelaVibes Logo"
-              width={40}
-              height={40}
-              priority
+              width={36}
+              alt="SelaVibes"
+              height={36}
             />
-            <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="text-gray-900 font-semibold text-lg tracking-tight">
               SelaVibes
             </span>
           </div>
-
-          {/* Loading skeleton */}
-          <div className="hidden md:flex items-center gap-6">
-            <div className="flex gap-6">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <div
-                  key={i}
-                  className="h-4 bg-gray-200 rounded animate-pulse w-16"
-                ></div>
-              ))}
-            </div>
-            <div className="h-8 bg-gray-200 rounded animate-pulse w-20"></div>
-          </div>
-
-          <div className="md:hidden">
-            <div className="h-8 bg-gray-200 rounded animate-pulse w-8"></div>
+          <div className="animate-pulse flex space-x-4">
+            <div className="h-6 bg-gray-200 rounded w-16"></div>
+            <div className="h-6 bg-gray-200 rounded w-16"></div>
+            <div className="h-8 bg-gray-200 rounded w-20"></div>
           </div>
         </div>
       </nav>
@@ -351,12 +337,10 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Mobile Dropdown Menu - FIXED */}
+      {/* Mobile Dropdown Menu - IMPROVED */}
       <div
         className={`mobile-menu md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-          isMenuOpen
-            ? "max-h-[500px] opacity-100 mt-4"
-            : "max-h-0 opacity-0 mt-0"
+          isMenuOpen ? "max-h-96 opacity-100 mt-4" : "max-h-0 opacity-0 mt-0"
         }`}
       >
         <div className="px-4 pt-4 pb-6 border-t border-gray-200 bg-white/95 backdrop-blur-md rounded-lg mx-2 space-y-3 text-sm font-medium text-gray-700">
@@ -372,48 +356,42 @@ export default function Navbar() {
             </Link>
           ))}
 
-          <hr className="my-3 border-gray-300" />
+          <hr className="my-3" />
 
-          {/* Auth Section for Mobile - COMPLETELY RESTRUCTURED */}
+          {/* Auth Section for Mobile */}
           {user ? (
-            <>
-              {/* User Info Display */}
-              <div className="flex items-center gap-3 px-3 py-3 bg-gray-50 rounded-lg">
+            <div className="space-y-3">
+              {/* User Info */}
+              <div className="flex items-center gap-3 px-3 py-2 bg-gray-50 rounded-lg">
                 <img
                   src={displayAvatar}
                   alt={displayName}
-                  className="w-10 h-10 rounded-full object-cover border-2 border-gray-200"
+                  className="w-8 h-8 rounded-full object-cover"
                 />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-gray-900 truncate">
+                  <p className="text-sm font-medium text-gray-900 truncate">
                     {displayName}
                   </p>
                   <p className="text-xs text-gray-500 truncate">
                     {displayEmail}
                   </p>
-                  <div className="mt-1">
-                    <span
-                      className={`inline-flex items-center px-2 py-0.5 text-xs font-semibold rounded-full ${
-                        isAdmin
-                          ? "bg-red-100 text-red-800"
-                          : "bg-green-100 text-green-800"
-                      }`}
-                    >
-                      {isAdmin ? "👑 Admin" : "👤 User"}
-                    </span>
-                  </div>
                 </div>
+                {isAdmin && (
+                  <span className="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full font-semibold">
+                    Admin
+                  </span>
+                )}
               </div>
 
-              {/* Admin Dashboard Link - Only for Admin */}
+              {/* Admin Dashboard for Mobile */}
               {isAdmin && (
                 <Link
                   href="/dashboard"
                   onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center w-full px-3 py-3 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors duration-200 font-medium"
+                  className="flex items-center w-full px-3 py-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors duration-200"
                 >
                   <svg
-                    className="w-5 h-5 mr-3"
+                    className="w-4 h-4 mr-3"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -422,20 +400,20 @@ export default function Navbar() {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 2 0 01-2 2h-2a2 2 0 01-2-2z"
                     />
                   </svg>
-                  🏠 Dashboard
+                  Dashboard
                 </Link>
               )}
 
-              {/* Sign Out Button - ALWAYS VISIBLE FOR LOGGED IN USERS */}
+              {/* Sign Out for Mobile - PASTIKAN SELALU ADA */}
               <button
                 onClick={handleSignOut}
-                className="flex items-center w-full px-3 py-3 text-red-700 bg-red-50 hover:bg-red-100 rounded-lg transition-colors duration-200 font-medium"
+                className="flex items-center w-full px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
               >
                 <svg
-                  className="w-5 h-5 mr-3"
+                  className="w-4 h-4 mr-3"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -447,9 +425,9 @@ export default function Navbar() {
                     d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
                   />
                 </svg>
-                🚪 Sign Out
+                Sign Out
               </button>
-            </>
+            </div>
           ) : (
             <div className="px-3">
               <LoginButton />
