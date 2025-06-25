@@ -138,7 +138,7 @@ export default function AuthProvider({
       setProfile(null);
 
       const { error } = await supabase.auth.signOut({
-        scope: "global",
+        scope: "local",
       });
 
       if (error) {
