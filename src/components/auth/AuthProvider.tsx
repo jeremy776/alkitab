@@ -41,11 +41,8 @@ export default function AuthProvider({
   const [signingOut, setSigningOut] = useState(false);
   const supabase = createClient();
 
-  // Helper function to fetch profile
   const fetchProfile = async (userId: string) => {
     try {
-      console.log("Fetching profile for user:", userId);
-
       const { data: profileData, error: profileError } = await supabase
         .from("profiles")
         .select("*")
@@ -55,7 +52,6 @@ export default function AuthProvider({
       if (profileError) {
         console.error("Profile fetch error:", profileError);
 
-        // If profile doesn't exist, create one from user metadata
         if (profileError.code === "PGRST116") {
           console.log("Profile not found, creating new profile...");
 
@@ -88,14 +84,12 @@ export default function AuthProvider({
               return null;
             }
 
-            console.log("Profile created successfully:", newProfile);
             return newProfile;
           }
         }
         return null;
       }
 
-      console.log("Profile fetched successfully:", profileData);
       return profileData;
     } catch (error) {
       console.error("Error in fetchProfile:", error);
@@ -140,8 +134,6 @@ export default function AuthProvider({
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log("Auth state change:", event, session?.user?.id);
-
       if (event === "SIGNED_OUT") {
         console.log("User signed out - clearing state");
         setUser(null);
@@ -176,34 +168,26 @@ export default function AuthProvider({
       return;
     }
 
-    console.log("=== PRODUCTION-OPTIMIZED SIGN OUT ===");
     setSigningOut(true);
 
     try {
-      console.log("Clearing local state immediately...");
       setUser(null);
       setProfile(null);
 
       if (typeof window !== "undefined") {
-        console.log("Clearing storage immediately...");
-
         try {
           localStorage.clear();
 
           sessionStorage.clear();
-
-          console.log("Storage cleared successfully");
         } catch (storageError) {
           console.error("Storage clear error (ignoring):", storageError);
         }
       }
 
-      console.log("Attempting Supabase signOut (background)...");
       supabase.auth.signOut().catch((error) => {
         console.log("Supabase signOut failed (ignoring):", error);
       });
 
-      console.log("Forcing immediate redirect...");
       if (typeof window !== "undefined") {
         setTimeout(() => {
           try {
@@ -215,8 +199,6 @@ export default function AuthProvider({
         }, 100);
       }
     } catch (error) {
-      console.error("Sign out error (proceeding anyway):", error);
-
       if (typeof window !== "undefined") {
         setTimeout(() => {
           window.location.replace("/");

@@ -17,7 +17,7 @@ interface Props {
   profile: Profile;
 }
 
-// Stats Cards Component
+// Stats Cards Component - Mobile Optimized
 function StatsCard({
   title,
   value,
@@ -32,14 +32,18 @@ function StatsCard({
   changeType?: "increase" | "decrease" | "neutral";
 }) {
   return (
-    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+    <div className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
       <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm font-medium text-gray-600">{title}</p>
-          <p className="text-2xl font-bold text-gray-900 mt-1">{value}</p>
+        <div className="flex-1 min-w-0">
+          <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">
+            {title}
+          </p>
+          <p className="text-xl sm:text-2xl font-bold text-gray-900 mt-1">
+            {value}
+          </p>
           {change && (
             <p
-              className={`text-sm mt-1 flex items-center ${
+              className={`text-xs sm:text-sm mt-1 flex items-center ${
                 changeType === "increase"
                   ? "text-green-600"
                   : changeType === "decrease"
@@ -49,7 +53,7 @@ function StatsCard({
             >
               {changeType === "increase" && (
                 <svg
-                  className="w-4 h-4 mr-1"
+                  className="w-3 h-3 sm:w-4 sm:h-4 mr-1"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -62,7 +66,7 @@ function StatsCard({
               )}
               {changeType === "decrease" && (
                 <svg
-                  className="w-4 h-4 mr-1"
+                  className="w-3 h-3 sm:w-4 sm:h-4 mr-1"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -73,18 +77,19 @@ function StatsCard({
                   />
                 </svg>
               )}
-              {change}
+              <span className="truncate">{change}</span>
             </p>
           )}
         </div>
-        <div className="p-3 bg-indigo-50 rounded-lg">{icon}</div>
+        <div className="p-2 sm:p-3 bg-indigo-50 rounded-lg flex-shrink-0 ml-3">
+          <div className="w-5 h-5 sm:w-6 sm:h-6">{icon}</div>
+        </div>
       </div>
     </div>
   );
 }
 
-// Custom Select Component
-// Custom Select Component - FIXED VERSION
+// Custom Select Component - Mobile Optimized
 function CustomSelect({
   value,
   onChange,
@@ -97,22 +102,22 @@ function CustomSelect({
   disabled?: boolean;
 }) {
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
         disabled={disabled}
-        className={`w-full px-3 py-2 text-sm font-medium bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 appearance-none cursor-pointer ${
+        className={`w-full px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-medium bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 appearance-none cursor-pointer ${
           disabled
             ? "opacity-50 cursor-not-allowed bg-gray-50"
             : "hover:border-gray-400"
         }`}
         style={{
           backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
-          backgroundPosition: "right 0.5rem center",
+          backgroundPosition: "right 0.375rem center",
           backgroundRepeat: "no-repeat",
-          backgroundSize: "1.5em 1.5em",
-          paddingRight: "2.5rem",
+          backgroundSize: "1.25em 1.25em",
+          paddingRight: "2rem",
         }}
       >
         {options.map((option) => (
@@ -125,7 +130,7 @@ function CustomSelect({
   );
 }
 
-// Action Button Component
+// Action Button Component - Mobile Optimized
 function ActionButton({
   onClick,
   variant = "secondary",
@@ -144,8 +149,8 @@ function ActionButton({
   }`;
 
   const sizeClasses = {
-    sm: "px-3 py-1.5 text-sm",
-    md: "px-4 py-2 text-base",
+    sm: "px-2 py-1 sm:px-3 sm:py-1.5 text-xs sm:text-sm",
+    md: "px-3 py-1.5 sm:px-4 sm:py-2 text-sm sm:text-base",
   };
 
   const variantClasses = {
@@ -167,8 +172,7 @@ function ActionButton({
   );
 }
 
-// Modal Component - FIXED VERSION
-// Modal Component - BLUR BACKGROUND VERSION
+// Modal Component - Mobile Optimized
 function Modal({
   isOpen,
   onClose,
@@ -185,16 +189,16 @@ function Modal({
   if (!isOpen) return null;
 
   const sizeClasses = {
-    sm: "max-w-md",
-    md: "max-w-lg",
-    lg: "max-w-2xl",
-    xl: "max-w-4xl",
+    sm: "max-w-sm sm:max-w-md",
+    md: "max-w-md sm:max-w-lg",
+    lg: "max-w-lg sm:max-w-2xl",
+    xl: "max-w-xl sm:max-w-4xl",
   };
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-        {/* Backdrop dengan blur effect */}
+        {/* Backdrop */}
         <div
           className="fixed inset-0 bg-black/30 backdrop-blur-sm transition-all duration-300"
           onClick={onClose}
@@ -206,17 +210,17 @@ function Modal({
         >
           {/* Header */}
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold leading-6 text-gray-900">
+            <h3 className="text-base sm:text-lg font-semibold leading-6 text-gray-900 pr-4">
               {title}
             </h3>
             <button
               type="button"
-              className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 flex-shrink-0"
               onClick={onClose}
             >
               <span className="sr-only">Close</span>
               <svg
-                className="h-6 w-6"
+                className="h-5 w-5 sm:h-6 sm:w-6"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth="1.5"
@@ -232,10 +236,60 @@ function Modal({
           </div>
 
           {/* Content */}
-          <div className="mt-3">{children}</div>
+          <div className="mt-3 max-h-[60vh] sm:max-h-[70vh] overflow-y-auto">
+            {children}
+          </div>
         </div>
       </div>
     </div>
+  );
+}
+
+// Mobile Table Component
+function MobileTable({
+  headers,
+  data,
+  renderRow,
+}: {
+  headers: string[];
+  data: any[];
+  renderRow: (item: any, index: number) => React.ReactNode;
+}) {
+  return (
+    <>
+      {/* Desktop Table */}
+      <div className="hidden sm:block overflow-x-auto">
+        <table className="w-full">
+          <thead className="bg-gray-50">
+            <tr>
+              {headers.map((header, index) => (
+                <th
+                  key={index}
+                  className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  {header}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {data.map((item, index) => renderRow(item, index))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Mobile Cards */}
+      <div className="sm:hidden space-y-4 p-4">
+        {data.map((item, index) => (
+          <div
+            key={index}
+            className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm"
+          >
+            {renderRow(item, index)}
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
 
@@ -262,6 +316,7 @@ export default function DashboardClient({
   } | null>(null);
   const supabase = createClient();
 
+  // ... keep existing functions (fetchData, updateUserRole, etc.) ...
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -369,13 +424,11 @@ export default function DashboardClient({
 
   const handleDelete = async () => {
     if (!deleteModal) return;
-
     if (deleteModal.type === "verse") {
       await deleteVerse(deleteModal.id);
     } else {
       await deletePrayer(deleteModal.id);
     }
-
     setDeleteModal(null);
   };
 
@@ -398,16 +451,16 @@ export default function DashboardClient({
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      {/* Header */}
+      {/* Header - Mobile Optimized */}
       <div className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-6 py-6">
-          <div className="flex justify-between items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
                 Admin Dashboard
               </h1>
-              <p className="text-gray-600 mt-1">
-                Welcome back, {profile.full_name}
+              <p className="text-gray-600 mt-1 text-sm sm:text-base">
+                Welcome back, {profile.full_name?.split(" ")[0]}
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -415,16 +468,18 @@ export default function DashboardClient({
                 onClick={refreshContent}
                 variant="primary"
                 disabled={loading}
+                size="md"
               >
                 {loading ? (
                   <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    Refreshing...
+                    <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span className="hidden sm:inline">Refreshing...</span>
+                    <span className="sm:hidden">...</span>
                   </div>
                 ) : (
                   <div className="flex items-center gap-2">
                     <svg
-                      className="w-4 h-4"
+                      className="w-3 h-3 sm:w-4 sm:h-4"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -436,7 +491,8 @@ export default function DashboardClient({
                         d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                       />
                     </svg>
-                    Refresh Content
+                    <span className="hidden sm:inline">Refresh Content</span>
+                    <span className="sm:hidden">Refresh</span>
                   </div>
                 )}
               </ActionButton>
@@ -445,22 +501,22 @@ export default function DashboardClient({
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        {/* Tabs */}
-        <div className="mb-8">
-          <div className="flex space-x-1 bg-gray-100 rounded-xl p-1">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
+        {/* Tabs - Mobile Optimized */}
+        <div className="mb-6 sm:mb-8">
+          <div className="flex overflow-x-auto bg-gray-100 rounded-xl p-1 gap-1 scrollbar-hide">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+                className={`flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium rounded-lg transition-all whitespace-nowrap flex-shrink-0 ${
                   activeTab === tab.id
                     ? "bg-white text-indigo-700 shadow-sm"
                     : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                 }`}
               >
                 <span>{tab.icon}</span>
-                {tab.name}
+                <span className="hidden xs:inline">{tab.name}</span>
               </button>
             ))}
           </div>
@@ -468,15 +524,15 @@ export default function DashboardClient({
 
         {/* Overview Tab */}
         {activeTab === "overview" && (
-          <div className="space-y-8">
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="space-y-6 sm:space-y-8">
+            {/* Stats Cards - Mobile Grid */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
               <StatsCard
                 title="Total Verses"
                 value={verses.length}
                 icon={
                   <svg
-                    className="w-6 h-6 text-indigo-600"
+                    className="w-full h-full text-indigo-600"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -497,7 +553,7 @@ export default function DashboardClient({
                 value={prayers.length}
                 icon={
                   <svg
-                    className="w-6 h-6 text-indigo-600"
+                    className="w-full h-full text-indigo-600"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -518,7 +574,7 @@ export default function DashboardClient({
                 value={users.length}
                 icon={
                   <svg
-                    className="w-6 h-6 text-indigo-600"
+                    className="w-full h-full text-indigo-600"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -539,7 +595,7 @@ export default function DashboardClient({
                 value={todayVerse && todayPrayer ? "✅ Ready" : "⚠️ Missing"}
                 icon={
                   <svg
-                    className="w-6 h-6 text-indigo-600"
+                    className="w-full h-full text-indigo-600"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -555,34 +611,34 @@ export default function DashboardClient({
               />
             </div>
 
-            {/* Today's Content Preview */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Today's Content Preview - Mobile Stack */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
               {/* Today's Verse */}
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900">
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-900">
                     Today's Verse
                   </h3>
-                  <span className="text-sm text-gray-500">
+                  <span className="text-xs sm:text-sm text-gray-500">
                     {new Date().toLocaleDateString()}
                   </span>
                 </div>
                 {todayVerse ? (
                   <div className="space-y-3">
-                    <p className="font-medium text-indigo-700">
+                    <p className="font-medium text-indigo-700 text-sm sm:text-base">
                       {todayVerse.reference}
                     </p>
-                    <p className="text-gray-700 leading-relaxed">
+                    <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
                       {todayVerse.text}
                     </p>
-                    <p className="text-sm text-gray-600 italic">
+                    <p className="text-xs sm:text-sm text-gray-600 italic">
                       {todayVerse.reflection}
                     </p>
                   </div>
                 ) : (
-                  <div className="text-center py-8 text-gray-500">
+                  <div className="text-center py-6 sm:py-8 text-gray-500">
                     <svg
-                      className="w-12 h-12 mx-auto mb-3 text-gray-300"
+                      className="w-8 h-8 sm:w-12 sm:h-12 mx-auto mb-3 text-gray-300"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -594,31 +650,31 @@ export default function DashboardClient({
                         d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
                       />
                     </svg>
-                    <p>No verse for today</p>
+                    <p className="text-sm">No verse for today</p>
                   </div>
                 )}
               </div>
 
               {/* Today's Prayer */}
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900">
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-900">
                     Today's Prayer
                   </h3>
-                  <span className="text-sm text-gray-500">
+                  <span className="text-xs sm:text-sm text-gray-500">
                     {new Date().toLocaleDateString()}
                   </span>
                 </div>
                 {todayPrayer ? (
                   <div className="space-y-3">
-                    <p className="text-gray-700 leading-relaxed">
+                    <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
                       {todayPrayer.prayer}
                     </p>
                   </div>
                 ) : (
-                  <div className="text-center py-8 text-gray-500">
+                  <div className="text-center py-6 sm:py-8 text-gray-500">
                     <svg
-                      className="w-12 h-12 mx-auto mb-3 text-gray-300"
+                      className="w-8 h-8 sm:w-12 sm:h-12 mx-auto mb-3 text-gray-300"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -630,7 +686,7 @@ export default function DashboardClient({
                         d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                       />
                     </svg>
-                    <p>No prayer for today</p>
+                    <p className="text-sm">No prayer for today</p>
                   </div>
                 )}
               </div>
@@ -640,227 +696,337 @@ export default function DashboardClient({
 
         {/* Verses Tab */}
         {activeTab === "verses" && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-            <div className="px-6 py-4 border-b border-gray-200">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-gray-900">
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
                   Daily Verses
                 </h2>
-                <span className="bg-indigo-100 text-indigo-800 text-sm font-medium px-3 py-1 rounded-full">
+                <span className="bg-indigo-100 text-indigo-800 text-xs sm:text-sm font-medium px-2 sm:px-3 py-1 rounded-full">
                   {verses.length} verses
                 </span>
               </div>
             </div>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Date
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Reference
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Text
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
-                    </th>
+
+            <MobileTable
+              headers={["Date", "Reference", "Text", "Actions"]}
+              data={verses}
+              renderRow={(verse, index) => (
+                <>
+                  {/* Desktop Row */}
+                  <tr
+                    key={verse.id}
+                    className="hidden sm:table-row hover:bg-gray-50"
+                  >
+                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {new Date(verse.date).toLocaleDateString()}
+                    </td>
+                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                      <span className="text-sm font-medium text-indigo-600">
+                        {verse.reference}
+                      </span>
+                    </td>
+                    <td className="px-4 sm:px-6 py-4">
+                      <p className="text-sm text-gray-900 max-w-md truncate">
+                        {verse.text}
+                      </p>
+                    </td>
+                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                      <ActionButton
+                        onClick={() => setSelectedVerse(verse)}
+                        variant="secondary"
+                      >
+                        View
+                      </ActionButton>
+                      <ActionButton
+                        onClick={() =>
+                          setDeleteModal({
+                            type: "verse",
+                            id: verse.id,
+                            title: verse.reference,
+                          })
+                        }
+                        variant="danger"
+                      >
+                        Delete
+                      </ActionButton>
+                    </td>
                   </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {verses.map((verse) => (
-                    <tr key={verse.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {new Date(verse.date).toLocaleDateString()}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="text-sm font-medium text-indigo-600">
+
+                  {/* Mobile Card */}
+                  <div key={verse.id} className="sm:hidden space-y-3">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="font-medium text-indigo-600 text-sm">
                           {verse.reference}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <p className="text-sm text-gray-900 max-w-md truncate">
-                          {verse.text}
                         </p>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                        <ActionButton
-                          onClick={() => setSelectedVerse(verse)}
-                          variant="secondary"
-                        >
-                          View
-                        </ActionButton>
-                        <ActionButton
-                          onClick={() =>
-                            setDeleteModal({
-                              type: "verse",
-                              id: verse.id,
-                              title: verse.reference,
-                            })
-                          }
-                          variant="danger"
-                        >
-                          Delete
-                        </ActionButton>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                        <p className="text-xs text-gray-500">
+                          {new Date(verse.date).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-700 line-clamp-2">
+                      {verse.text}
+                    </p>
+                    <div className="flex gap-2">
+                      <ActionButton
+                        onClick={() => setSelectedVerse(verse)}
+                        variant="secondary"
+                        size="sm"
+                      >
+                        View
+                      </ActionButton>
+                      <ActionButton
+                        onClick={() =>
+                          setDeleteModal({
+                            type: "verse",
+                            id: verse.id,
+                            title: verse.reference,
+                          })
+                        }
+                        variant="danger"
+                        size="sm"
+                      >
+                        Delete
+                      </ActionButton>
+                    </div>
+                  </div>
+                </>
+              )}
+            />
           </div>
         )}
 
         {/* Prayers Tab */}
         {activeTab === "prayers" && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-            <div className="px-6 py-4 border-b border-gray-200">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-gray-900">
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
                   Daily Prayers
                 </h2>
-                <span className="bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full">
+                <span className="bg-green-100 text-green-800 text-xs sm:text-sm font-medium px-2 sm:px-3 py-1 rounded-full">
                   {prayers.length} prayers
                 </span>
               </div>
             </div>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Date
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Prayer
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
-                    </th>
+
+            <MobileTable
+              headers={["Date", "Prayer", "Actions"]}
+              data={prayers}
+              renderRow={(prayer, index) => (
+                <>
+                  {/* Desktop Row */}
+                  <tr
+                    key={prayer.id}
+                    className="hidden sm:table-row hover:bg-gray-50"
+                  >
+                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {new Date(prayer.date).toLocaleDateString()}
+                    </td>
+                    <td className="px-4 sm:px-6 py-4">
+                      <p className="text-sm text-gray-900 max-w-md truncate">
+                        {prayer.prayer}
+                      </p>
+                    </td>
+                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                      <ActionButton
+                        onClick={() => setSelectedPrayer(prayer)}
+                        variant="secondary"
+                      >
+                        View
+                      </ActionButton>
+                      <ActionButton
+                        onClick={() =>
+                          setDeleteModal({
+                            type: "prayer",
+                            id: prayer.id,
+                            title: "Prayer",
+                          })
+                        }
+                        variant="danger"
+                      >
+                        Delete
+                      </ActionButton>
+                    </td>
                   </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {prayers.map((prayer) => (
-                    <tr key={prayer.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+
+                  {/* Mobile Card */}
+                  <div key={prayer.id} className="sm:hidden space-y-3">
+                    <div className="flex justify-between items-start">
+                      <p className="text-xs text-gray-500">
                         {new Date(prayer.date).toLocaleDateString()}
-                      </td>
-                      <td className="px-6 py-4">
-                        <p className="text-sm text-gray-900 max-w-md truncate">
-                          {prayer.prayer}
-                        </p>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                        <ActionButton
-                          onClick={() => setSelectedPrayer(prayer)}
-                          variant="secondary"
-                        >
-                          View
-                        </ActionButton>
-                        <ActionButton
-                          onClick={() =>
-                            setDeleteModal({
-                              type: "prayer",
-                              id: prayer.id,
-                              title: "Prayer",
-                            })
-                          }
-                          variant="danger"
-                        >
-                          Delete
-                        </ActionButton>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                      </p>
+                    </div>
+                    <p className="text-sm text-gray-700 line-clamp-3">
+                      {prayer.prayer}
+                    </p>
+                    <div className="flex gap-2">
+                      <ActionButton
+                        onClick={() => setSelectedPrayer(prayer)}
+                        variant="secondary"
+                        size="sm"
+                      >
+                        View
+                      </ActionButton>
+                      <ActionButton
+                        onClick={() =>
+                          setDeleteModal({
+                            type: "prayer",
+                            id: prayer.id,
+                            title: "Prayer",
+                          })
+                        }
+                        variant="danger"
+                        size="sm"
+                      >
+                        Delete
+                      </ActionButton>
+                    </div>
+                  </div>
+                </>
+              )}
+            />
           </div>
         )}
 
         {/* Users Tab */}
         {activeTab === "users" && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-gray-900">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
                   Users Management
                 </h2>
-                <div className="flex items-center gap-4">
-                  <span className="bg-red-100 text-red-800 text-sm font-medium px-3 py-1 rounded-full">
+                <div className="flex items-center gap-2 sm:gap-4">
+                  <span className="bg-red-100 text-red-800 text-xs sm:text-sm font-medium px-2 sm:px-3 py-1 rounded-full">
                     {adminCount} admins
                   </span>
-                  <span className="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
+                  <span className="bg-blue-100 text-blue-800 text-xs sm:text-sm font-medium px-2 sm:px-3 py-1 rounded-full">
                     {userCount} users
                   </span>
                 </div>
               </div>
             </div>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      User
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Email
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Role
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Joined
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {users.map((userData) => (
-                    <tr key={userData.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <img
-                            className="h-10 w-10 rounded-full object-cover border-2 border-gray-200"
-                            src={userData.avatar_url || "/default-avatar.png"}
-                            alt={userData.full_name || "User"}
-                          />
-                          <div className="ml-4">
-                            <div className="text-sm font-medium text-gray-900">
-                              {userData.full_name || "Unknown User"}
-                            </div>
-                            <div className="text-sm text-gray-500">
-                              {userData.id === user.id && "(You)"}
-                            </div>
+
+            <MobileTable
+              headers={["User", "Email", "Role", "Joined", "Actions"]}
+              data={users}
+              renderRow={(userData, index) => (
+                <>
+                  {/* Desktop Row */}
+                  <tr
+                    key={userData.id}
+                    className="hidden sm:table-row hover:bg-gray-50"
+                  >
+                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <img
+                          className="h-8 w-8 sm:h-10 sm:w-10 rounded-full object-cover border-2 border-gray-200"
+                          src={
+                            userData.avatar_url ||
+                            "https://ui-avatars.com/api/?name=" +
+                              encodeURIComponent(userData.full_name || "User") +
+                              "&background=6366f1&color=ffffff"
+                          }
+                          alt={userData.full_name || "User"}
+                        />
+                        <div className="ml-4">
+                          <div className="text-sm font-medium text-gray-900">
+                            {userData.full_name || "Unknown User"}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {userData.id === user.id && "(You)"}
                           </div>
                         </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {userData.email}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            userData.role === "admin"
-                              ? "bg-red-100 text-red-800"
-                              : "bg-green-100 text-green-800"
-                          }`}
-                        >
-                          {userData.role === "admin" ? "👑 Admin" : "👤 User"}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      </div>
+                    </td>
+                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {userData.email}
+                    </td>
+                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                      <span
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                          userData.role === "admin"
+                            ? "bg-red-100 text-red-800"
+                            : "bg-green-100 text-green-800"
+                        }`}
+                      >
+                        {userData.role === "admin" ? "👑 Admin" : "👤 User"}
+                      </span>
+                    </td>
+                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {new Date(userData.created_at).toLocaleDateString()}
+                    </td>
+                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                      <CustomSelect
+                        value={userData.role}
+                        onChange={(newRole) => {
+                          updateUserRole(
+                            userData.id,
+                            newRole as "admin" | "user"
+                          );
+                        }}
+                        disabled={userData.id === user.id}
+                        options={[
+                          {
+                            value: "user",
+                            label: "👤 User",
+                            color: "text-green-700",
+                          },
+                          {
+                            value: "admin",
+                            label: "👑 Admin",
+                            color: "text-red-700",
+                          },
+                        ]}
+                      />
+                    </td>
+                  </tr>
+
+                  {/* Mobile Card  */}
+                  <div key={userData.id} className="sm:hidden space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <img
+                          className="h-10 w-10 rounded-full object-cover border-2 border-gray-200"
+                          src={
+                            userData.avatar_url ||
+                            "https://ui-avatars.com/api/?name=" +
+                              encodeURIComponent(userData.full_name || "User") +
+                              "&background=6366f1&color=ffffff"
+                          }
+                          alt={userData.full_name || "User"}
+                        />
+                        <div>
+                          <div className="text-sm font-medium text-gray-900">
+                            {userData.full_name || "Unknown User"}
+                            {userData.id === user.id && " (You)"}
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            {userData.email}
+                          </div>
+                        </div>
+                      </div>
+                      <span
+                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
+                          userData.role === "admin"
+                            ? "bg-red-100 text-red-800"
+                            : "bg-green-100 text-green-800"
+                        }`}
+                      >
+                        {userData.role === "admin" ? "👑" : "👤"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs text-gray-500">
+                        Joined{" "}
                         {new Date(userData.created_at).toLocaleDateString()}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      </span>
+                      <div className="w-24">
                         <CustomSelect
                           value={userData.role}
                           onChange={(newRole) => {
-                            console.log(newRole);
                             updateUserRole(
                               userData.id,
                               newRole as "admin" | "user"
@@ -870,27 +1036,27 @@ export default function DashboardClient({
                           options={[
                             {
                               value: "user",
-                              label: "👤 User",
+                              label: "User",
                               color: "text-green-700",
                             },
                             {
                               value: "admin",
-                              label: "👑 Admin",
+                              label: "Admin",
                               color: "text-red-700",
                             },
                           ]}
                         />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+            />
           </div>
         )}
       </div>
 
-      {/* Modals */}
+      {/* Modals - Keep existing modals but they're already responsive */}
       {/* Verse Detail Modal */}
       <Modal
         isOpen={!!selectedVerse}
@@ -899,7 +1065,7 @@ export default function DashboardClient({
         size="lg"
       >
         {selectedVerse && (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Date
@@ -928,7 +1094,7 @@ export default function DashboardClient({
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Long Reflection
               </label>
-              <div className="text-sm text-gray-900 leading-relaxed bg-yellow-50 p-4 rounded-lg max-h-60 overflow-y-auto">
+              <div className="text-sm text-gray-900 leading-relaxed bg-yellow-50 p-4 rounded-lg max-h-40 sm:max-h-60 overflow-y-auto">
                 {selectedVerse.long_reflection
                   .split("\n")
                   .map((paragraph, index) => (
@@ -950,7 +1116,7 @@ export default function DashboardClient({
         size="md"
       >
         {selectedPrayer && (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Date
@@ -1004,12 +1170,12 @@ export default function DashboardClient({
             </p>
 
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
-              <p className="text-sm font-medium text-gray-800">
+              <p className="text-sm font-medium text-gray-800 truncate">
                 {deleteModal.title}
               </p>
             </div>
 
-            <div className="flex gap-3 justify-end pt-4">
+            <div className="flex flex-col sm:flex-row gap-3 justify-end pt-4">
               <ActionButton
                 onClick={() => setDeleteModal(null)}
                 variant="secondary"
