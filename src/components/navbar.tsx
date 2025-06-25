@@ -59,12 +59,21 @@ export default function Navbar() {
 
   const handleSignOut = async () => {
     try {
+      setIsProfileOpen(false);
+      setIsMenuOpen(false);
+
       await signOut();
+
+      if (typeof window !== "undefined") {
+        window.location.href = "/";
+      }
     } catch (error) {
       console.error("Error signing out:", error);
+      if (typeof window !== "undefined") {
+        window.location.href = "/";
+      }
     }
   };
-
   // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -335,16 +344,16 @@ export default function Navbar() {
               {/* User Info */}
               <div className="flex items-center gap-3 px-3 py-2 bg-gray-50 rounded-lg">
                 <img
-                  src={profile?.avatar_url || "/default-avatar.png"}
-                  alt={profile?.full_name || "User"}
+                  src={displayAvatar}
+                  alt={displayName}
                   className="w-8 h-8 rounded-full object-cover"
                 />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-gray-900 truncate">
-                    {profile?.full_name}
+                    {displayName}
                   </p>
                   <p className="text-xs text-gray-500 truncate">
-                    {profile?.email}
+                    {displayEmail}
                   </p>
                 </div>
                 {isAdmin && (
@@ -378,7 +387,7 @@ export default function Navbar() {
                 </Link>
               )}
 
-              {/* Sign Out for Mobile */}
+              {/* Sign Out for Mobile - PASTIKAN SELALU ADA */}
               <button
                 onClick={handleSignOut}
                 className="flex items-center w-full px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
@@ -393,7 +402,7 @@ export default function Navbar() {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
-                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3v1"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
                   />
                 </svg>
                 Sign Out

@@ -177,28 +177,32 @@ export default function AuthProvider({
       if (typeof window !== "undefined") {
         try {
           localStorage.clear();
-
           sessionStorage.clear();
+
+          const keys = Object.keys(localStorage);
+          keys.forEach((key) => {
+            if (key.startsWith("sb-")) {
+              localStorage.removeItem(key);
+            }
+          });
         } catch (storageError) {
           console.error("Storage clear error (ignoring):", storageError);
         }
       }
 
-      supabase.auth.signOut().catch((error) => {
-        console.log("Supabase signOut failed (ignoring):", error);
-      });
+      await supabase.auth.signOut();
 
       if (typeof window !== "undefined") {
         setTimeout(() => {
           try {
             window.location.replace("/");
           } catch (e) {
-            // Fallback redirect method
             window.location.href = "/";
           }
         }, 100);
       }
     } catch (error) {
+      console.error("Sign out error:", error);
       if (typeof window !== "undefined") {
         setTimeout(() => {
           window.location.replace("/");
