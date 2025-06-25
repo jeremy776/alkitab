@@ -94,6 +94,7 @@ export default function AuthProvider({
         setUser(null);
         setProfile(null);
         setLoading(false);
+        setSigningOut(false); // Reset signing out state
         return;
       }
 
@@ -130,25 +131,39 @@ export default function AuthProvider({
 
   const signOut = async () => {
     if (signingOut) return;
+
     try {
       setSigningOut(true);
       console.log("Starting sign out process...");
 
+      const timeoutId = setTimeout(() => {
+        console.log("Sign out timeout - forcing redirect");
+        setSigningOut(false);
+        setUser(null);
+        setProfile(null);
+        if (typeof window !== "undefined") {
+          window.location.href = "/";
+        }
+      }, 5000); // 5 second timeout
+
       setUser(null);
       setProfile(null);
 
-      const { error } = await supabase.auth.signOut({
-        scope: "local",
-      });
+      console.log("Calling supabase.auth.signOut...");
+      const { error } = await supabase.auth.signOut();
+
+      clearTimeout(timeoutId); // Clear timeout if successful
 
       if (error) {
         console.error("Sign out error:", error);
-        throw error;
       }
 
-      console.log("Sign out successful");
+      console.log("Sign out API call completed");
 
+      // Clear storage
       if (typeof window !== "undefined") {
+        console.log("Clearing storage...");
+
         const keysToRemove = [];
         for (let i = 0; i < localStorage.length; i++) {
           const key = localStorage.key(i);
@@ -158,6 +173,7 @@ export default function AuthProvider({
         }
         keysToRemove.forEach((key) => localStorage.removeItem(key));
 
+        // Clear sessionStorage
         const sessionKeysToRemove = [];
         for (let i = 0; i < sessionStorage.length; i++) {
           const key = sessionStorage.key(i);
@@ -167,18 +183,24 @@ export default function AuthProvider({
         }
         sessionKeysToRemove.forEach((key) => sessionStorage.removeItem(key));
 
-        window.location.href = "/";
+        console.log("Redirecting to home...");
+
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 100);
       }
     } catch (error) {
       console.error("Error during sign out:", error);
+
       setUser(null);
       setProfile(null);
+      setSigningOut(false);
 
       if (typeof window !== "undefined") {
-        window.location.href = "/";
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 100);
       }
-    } finally {
-      setSigningOut(false);
     }
   };
 
