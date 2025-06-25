@@ -162,6 +162,8 @@ export default function AuthProvider({
     };
   }, [supabase.auth]);
 
+  // ...existing code...
+
   const signOut = async () => {
     if (signingOut) {
       console.log("Already signing out, skipping...");
@@ -171,49 +173,75 @@ export default function AuthProvider({
     setSigningOut(true);
 
     try {
+      // Clear state immediately
       setUser(null);
       setProfile(null);
 
+      // Clear all storage with error handling
       if (typeof window !== "undefined") {
         try {
-          localStorage.clear();
-          sessionStorage.clear();
-
+          // Clear localStorage
           const keys = Object.keys(localStorage);
           keys.forEach((key) => {
-            if (key.startsWith("sb-")) {
+            if (key.startsWith("sb-") || key.includes("supabase")) {
               localStorage.removeItem(key);
             }
           });
+          localStorage.clear();
+
+          // Clear sessionStorage
+          sessionStorage.clear();
+
+          // Clear cookies if any
+          document.cookie.split(";").forEach((c) => {
+            const eqPos = c.indexOf("=");
+            const name = eqPos > -1 ? c.substr(0, eqPos) : c;
+            document.cookie =
+              name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+          });
         } catch (storageError) {
-          console.error("Storage clear error (ignoring):", storageError);
+          console.error("Storage clear error:", storageError);
         }
       }
 
-      await supabase.auth.signOut();
+      // Sign out from Supabase
+      const { error } = await supabase.auth.signOut({
+        scope: "global", // This ensures complete logout
+      });
 
+      if (error) {
+        console.error("Supabase signout error:", error);
+      }
+
+      // Force redirect with cache busting
       if (typeof window !== "undefined") {
-        setTimeout(() => {
-          try {
-            window.location.replace("/");
-          } catch (e) {
-            window.location.href = "/";
-          }
-        }, 100);
+        // Clear any cached data
+        if ("caches" in window) {
+          caches.keys().then((names) => {
+            names.forEach((name) => {
+              caches.delete(name);
+            });
+          });
+        }
+
+        // Use replace to prevent back button issues
+        window.location.replace("/?t=" + Date.now());
       }
     } catch (error) {
       console.error("Sign out error:", error);
+      // Force redirect even on error
       if (typeof window !== "undefined") {
-        setTimeout(() => {
-          window.location.replace("/");
-        }, 100);
+        window.location.replace("/?t=" + Date.now());
       }
     } finally {
+      // Delay to ensure cleanup
       setTimeout(() => {
         setSigningOut(false);
-      }, 1000);
+      }, 2000);
     }
   };
+
+  // ...existing code...
 
   return (
     <AuthContext.Provider
