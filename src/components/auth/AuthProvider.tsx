@@ -188,7 +188,7 @@ export default function AuthProvider({
       if (typeof window !== "undefined") {
         localStorage.clear();
         sessionStorage.clear();
-        window.location.href = "/";
+        // window.location.href = "/";
       }
     }, 3000); // 3 second timeout
 
