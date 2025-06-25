@@ -57,10 +57,8 @@ export default function AuthProvider({
 
         // If profile doesn't exist, create one from user metadata
         if (profileError.code === "PGRST116") {
-          // No rows returned
           console.log("Profile not found, creating new profile...");
 
-          // Get user data from auth
           const {
             data: { user: authUser },
           } = await supabase.auth.getUser();
@@ -108,8 +106,6 @@ export default function AuthProvider({
   useEffect(() => {
     const getSession = async () => {
       try {
-        console.log("Getting initial session...");
-
         const {
           data: { session },
           error,
@@ -122,31 +118,12 @@ export default function AuthProvider({
           return;
         }
 
+        setUser(session?.user ?? null);
+
         if (session?.user) {
-          console.log("Session found, setting user:", session.user.id);
-          setUser(session.user);
-
-          // Fetch profile with retry logic
-          let retryCount = 0;
-          const maxRetries = 3;
-          let profileData = null;
-
-          while (retryCount < maxRetries && !profileData) {
-            profileData = await fetchProfile(session.user.id);
-            if (!profileData) {
-              retryCount++;
-              console.log(`Profile fetch retry ${retryCount}/${maxRetries}`);
-              // Wait before retry
-              await new Promise((resolve) =>
-                setTimeout(resolve, 1000 * retryCount)
-              );
-            }
-          }
-
+          const profileData = await fetchProfile(session.user.id);
           setProfile(profileData);
         } else {
-          console.log("No session found");
-          setUser(null);
           setProfile(null);
         }
       } catch (error) {
@@ -175,15 +152,12 @@ export default function AuthProvider({
       }
 
       if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
-        if (session?.user) {
-          console.log("User signed in, setting state:", session.user.id);
-          setUser(session.user);
+        setUser(session?.user ?? null);
 
-          // Fetch profile for signed in user
+        if (session?.user) {
           const profileData = await fetchProfile(session.user.id);
           setProfile(profileData);
         } else {
-          setUser(null);
           setProfile(null);
         }
       }
@@ -205,59 +179,78 @@ export default function AuthProvider({
     console.log("=== SIGN OUT STARTED ===");
     setSigningOut(true);
 
+    const forceRedirectTimer = setTimeout(() => {
+      console.log("Sign out taking too long, forcing redirect...");
+      setUser(null);
+      setProfile(null);
+      setSigningOut(false);
+
+      if (typeof window !== "undefined") {
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.href = "/";
+      }
+    }, 3000); // 3 second timeout
+
     try {
-      // Clear state immediately for better UX
       console.log("Clearing local state...");
       setUser(null);
       setProfile(null);
 
-      // Call Supabase signOut
-      console.log("Calling Supabase signOut...");
-      const { error } = await supabase.auth.signOut({
-        scope: "global",
-      });
+      console.log("Attempting sign out...");
 
-      if (error) {
-        console.error("Supabase signOut error:", error);
-        // Don't throw - continue with cleanup
-      } else {
-        console.log("Supabase signOut successful");
-      }
+      const signOutPromise = supabase.auth.signOut();
 
-      // Clear browser storage
-      console.log("Clearing browser storage...");
-      if (typeof window !== "undefined") {
-        // Clear all localStorage
-        localStorage.clear();
+      const globalSignOutPromise = supabase.auth.signOut({ scope: "global" });
 
-        // Clear all sessionStorage
-        sessionStorage.clear();
+      // Race between the two methods with timeout
+      const signOutResult = await Promise.race([
+        signOutPromise,
+        globalSignOutPromise,
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("Sign out timeout")), 2000)
+        ),
+      ]);
 
-        console.log("Storage cleared");
-      }
-
-      console.log("=== SIGN OUT COMPLETED ===");
-
-      // Force page reload to ensure clean state
-      if (typeof window !== "undefined") {
-        console.log("Reloading page...");
-        window.location.href = "/";
-      }
+      console.log("Sign out successful:", signOutResult);
+      clearTimeout(forceRedirectTimer);
     } catch (error) {
       console.error("Sign out error:", error);
-
-      // Force cleanup even on error
-      setUser(null);
-      setProfile(null);
-
-      if (typeof window !== "undefined") {
-        localStorage.clear();
-        sessionStorage.clear();
-        window.location.href = "/";
-      }
-    } finally {
-      setSigningOut(false);
+      clearTimeout(forceRedirectTimer);
     }
+
+    // Always clear storage and redirect regardless of API success
+    try {
+      if (typeof window !== "undefined") {
+        console.log("Clearing storage...");
+
+        // Clear specific Supabase keys first
+        Object.keys(localStorage).forEach((key) => {
+          if (key.startsWith("sb-") || key.includes("supabase")) {
+            localStorage.removeItem(key);
+          }
+        });
+
+        Object.keys(sessionStorage).forEach((key) => {
+          if (key.startsWith("sb-") || key.includes("supabase")) {
+            sessionStorage.removeItem(key);
+          }
+        });
+
+        console.log("Storage cleared, redirecting...");
+
+        // Force immediate redirect
+        window.location.replace("/");
+      }
+    } catch (storageError) {
+      console.error("Storage clear error:", storageError);
+      // Still try to redirect even if storage clear fails
+      if (typeof window !== "undefined") {
+        window.location.replace("/");
+      }
+    }
+
+    setSigningOut(false);
   };
 
   return (
