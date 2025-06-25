@@ -1,4 +1,4 @@
-import { createBrowserClient, createServerClient as csc } from "@supabase/ssr";
+import { createServerClient as csc } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 import type { Database } from "./database.types";
 
