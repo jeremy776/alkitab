@@ -41,9 +41,75 @@ export default function AuthProvider({
   const [signingOut, setSigningOut] = useState(false);
   const supabase = createClient();
 
+  // Helper function to fetch profile
+  const fetchProfile = async (userId: string) => {
+    try {
+      console.log("Fetching profile for user:", userId);
+
+      const { data: profileData, error: profileError } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", userId)
+        .single();
+
+      if (profileError) {
+        console.error("Profile fetch error:", profileError);
+
+        // If profile doesn't exist, create one from user metadata
+        if (profileError.code === "PGRST116") {
+          // No rows returned
+          console.log("Profile not found, creating new profile...");
+
+          // Get user data from auth
+          const {
+            data: { user: authUser },
+          } = await supabase.auth.getUser();
+
+          if (authUser) {
+            const { data: newProfile, error: createError } = await supabase
+              .from("profiles")
+              .insert([
+                {
+                  id: authUser.id,
+                  email: authUser.email,
+                  full_name:
+                    authUser.user_metadata?.full_name ||
+                    authUser.user_metadata?.name ||
+                    "User",
+                  avatar_url:
+                    authUser.user_metadata?.avatar_url ||
+                    authUser.user_metadata?.picture,
+                  role: "user",
+                },
+              ])
+              .select()
+              .single();
+
+            if (createError) {
+              console.error("Failed to create profile:", createError);
+              return null;
+            }
+
+            console.log("Profile created successfully:", newProfile);
+            return newProfile;
+          }
+        }
+        return null;
+      }
+
+      console.log("Profile fetched successfully:", profileData);
+      return profileData;
+    } catch (error) {
+      console.error("Error in fetchProfile:", error);
+      return null;
+    }
+  };
+
   useEffect(() => {
     const getSession = async () => {
       try {
+        console.log("Getting initial session...");
+
         const {
           data: { session },
           error,
@@ -56,21 +122,31 @@ export default function AuthProvider({
           return;
         }
 
-        setUser(session?.user ?? null);
-
         if (session?.user) {
-          const { data: profileData, error: profileError } = await supabase
-            .from("profiles")
-            .select("*")
-            .eq("id", session.user.id)
-            .single();
+          console.log("Session found, setting user:", session.user.id);
+          setUser(session.user);
 
-          if (profileError) {
-            console.error("Profile fetch error:", profileError);
+          // Fetch profile with retry logic
+          let retryCount = 0;
+          const maxRetries = 3;
+          let profileData = null;
+
+          while (retryCount < maxRetries && !profileData) {
+            profileData = await fetchProfile(session.user.id);
+            if (!profileData) {
+              retryCount++;
+              console.log(`Profile fetch retry ${retryCount}/${maxRetries}`);
+              // Wait before retry
+              await new Promise((resolve) =>
+                setTimeout(resolve, 1000 * retryCount)
+              );
+            }
           }
 
           setProfile(profileData);
         } else {
+          console.log("No session found");
+          setUser(null);
           setProfile(null);
         }
       } catch (error) {
@@ -99,26 +175,15 @@ export default function AuthProvider({
       }
 
       if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
-        setUser(session?.user ?? null);
-
         if (session?.user) {
-          try {
-            const { data: profileData, error: profileError } = await supabase
-              .from("profiles")
-              .select("*")
-              .eq("id", session.user.id)
-              .single();
+          console.log("User signed in, setting state:", session.user.id);
+          setUser(session.user);
 
-            if (profileError) {
-              console.error("Profile fetch error:", profileError);
-            }
-
-            setProfile(profileData);
-          } catch (error) {
-            console.error("Error fetching profile:", error);
-            setProfile(null);
-          }
+          // Fetch profile for signed in user
+          const profileData = await fetchProfile(session.user.id);
+          setProfile(profileData);
         } else {
+          setUser(null);
           setProfile(null);
         }
       }

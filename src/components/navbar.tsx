@@ -87,8 +87,8 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Show loading state only for a short time
-  if (!mounted || (loading && !user && !profile)) {
+  // Show loading state with better handling
+  if (!mounted || (loading && !user)) {
     return (
       <nav className="bg-white/80 backdrop-blur-md py-4 px-6 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -113,6 +113,19 @@ export default function Navbar() {
       </nav>
     );
   }
+
+  // Display fallback name if profile is loading but user exists
+  const displayName =
+    profile?.full_name ||
+    user?.user_metadata?.full_name ||
+    user?.user_metadata?.name ||
+    "User";
+  const displayEmail = profile?.email || user?.email || "";
+  const displayAvatar =
+    profile?.avatar_url ||
+    user?.user_metadata?.avatar_url ||
+    user?.user_metadata?.picture ||
+    "/default-avatar.png";
 
   return (
     <nav className="bg-white/80 backdrop-blur-md py-4 px-6 sticky top-0 z-50">
@@ -155,12 +168,12 @@ export default function Navbar() {
                   className="profile-button flex items-center gap-2 bg-gray-100 hover:bg-gray-200 rounded-full px-3 py-2 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >
                   <img
-                    src={profile?.avatar_url || "/default-avatar.png"}
-                    alt={profile?.full_name || "User"}
+                    src={displayAvatar}
+                    alt={displayName}
                     className="w-6 h-6 rounded-full object-cover"
                   />
                   <span className="text-sm font-medium text-gray-700 max-w-20 truncate">
-                    {profile?.full_name?.split(" ")[0] || "User"}
+                    {displayName.split(" ")[0]}
                   </span>
                   {isAdmin && (
                     <span className="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full font-semibold">
@@ -184,23 +197,23 @@ export default function Navbar() {
                   </svg>
                 </button>
 
-                {/* Profile Dropdown - FIXED */}
+                {/* Profile Dropdown */}
                 {isProfileOpen && (
                   <>
                     <div className="absolute right-0 top-full mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-200 py-2 z-[60] animate-in fade-in-0 slide-in-from-top-2 duration-200">
                       <div className="px-4 py-3 border-b border-gray-100">
                         <div className="flex items-center gap-3">
                           <img
-                            src={profile?.avatar_url || "/default-avatar.png"}
-                            alt={profile?.full_name || "User"}
+                            src={displayAvatar}
+                            alt={displayName}
                             className="w-10 h-10 rounded-full object-cover"
                           />
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium text-gray-900 truncate">
-                              {profile?.full_name}
+                              {displayName}
                             </p>
                             <p className="text-xs text-gray-500 truncate">
-                              {profile?.email}
+                              {displayEmail}
                             </p>
                           </div>
                         </div>
