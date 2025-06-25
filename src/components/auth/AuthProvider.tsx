@@ -216,6 +216,7 @@ export default function AuthProvider({
       clearTimeout(forceRedirectTimer);
     } catch (error) {
       console.error("Sign out error:", error);
+      console.error(error);
       clearTimeout(forceRedirectTimer);
     }
 
