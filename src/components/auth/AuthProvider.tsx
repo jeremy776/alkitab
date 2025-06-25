@@ -89,36 +89,38 @@ export default function AuthProvider({
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log("Auth state change:", event, session?.user?.id);
 
-      // Handle sign out event
       if (event === "SIGNED_OUT") {
+        console.log("User signed out - clearing state");
         setUser(null);
         setProfile(null);
+        setSigningOut(false);
         setLoading(false);
-        setSigningOut(false); // Reset signing out state
         return;
       }
 
-      setUser(session?.user ?? null);
+      if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
+        setUser(session?.user ?? null);
 
-      if (session?.user) {
-        try {
-          const { data: profileData, error: profileError } = await supabase
-            .from("profiles")
-            .select("*")
-            .eq("id", session.user.id)
-            .single();
+        if (session?.user) {
+          try {
+            const { data: profileData, error: profileError } = await supabase
+              .from("profiles")
+              .select("*")
+              .eq("id", session.user.id)
+              .single();
 
-          if (profileError) {
-            console.error("Profile fetch error:", profileError);
+            if (profileError) {
+              console.error("Profile fetch error:", profileError);
+            }
+
+            setProfile(profileData);
+          } catch (error) {
+            console.error("Error fetching profile:", error);
+            setProfile(null);
           }
-
-          setProfile(profileData);
-        } catch (error) {
-          console.error("Error fetching profile:", error);
+        } else {
           setProfile(null);
         }
-      } else {
-        setProfile(null);
       }
 
       setLoading(false);
@@ -130,77 +132,66 @@ export default function AuthProvider({
   }, [supabase.auth]);
 
   const signOut = async () => {
-    if (signingOut) return;
+    if (signingOut) {
+      console.log("Already signing out, skipping...");
+      return;
+    }
+
+    console.log("=== SIGN OUT STARTED ===");
+    setSigningOut(true);
 
     try {
-      setSigningOut(true);
-      console.log("Starting sign out process...");
-
-      const timeoutId = setTimeout(() => {
-        console.log("Sign out timeout - forcing redirect");
-        setSigningOut(false);
-        setUser(null);
-        setProfile(null);
-        if (typeof window !== "undefined") {
-          window.location.href = "/";
-        }
-      }, 5000); // 5 second timeout
-
+      // Clear state immediately for better UX
+      console.log("Clearing local state...");
       setUser(null);
       setProfile(null);
 
-      console.log("Calling supabase.auth.signOut...");
-      const { error } = await supabase.auth.signOut();
-
-      clearTimeout(timeoutId); // Clear timeout if successful
+      // Call Supabase signOut
+      console.log("Calling Supabase signOut...");
+      const { error } = await supabase.auth.signOut({
+        scope: "global",
+      });
 
       if (error) {
-        console.error("Sign out error:", error);
+        console.error("Supabase signOut error:", error);
+        // Don't throw - continue with cleanup
+      } else {
+        console.log("Supabase signOut successful");
       }
 
-      console.log("Sign out API call completed");
-
-      // Clear storage
+      // Clear browser storage
+      console.log("Clearing browser storage...");
       if (typeof window !== "undefined") {
-        console.log("Clearing storage...");
+        // Clear all localStorage
+        localStorage.clear();
 
-        const keysToRemove = [];
-        for (let i = 0; i < localStorage.length; i++) {
-          const key = localStorage.key(i);
-          if (key && (key.startsWith("supabase") || key.startsWith("sb-"))) {
-            keysToRemove.push(key);
-          }
-        }
-        keysToRemove.forEach((key) => localStorage.removeItem(key));
+        // Clear all sessionStorage
+        sessionStorage.clear();
 
-        // Clear sessionStorage
-        const sessionKeysToRemove = [];
-        for (let i = 0; i < sessionStorage.length; i++) {
-          const key = sessionStorage.key(i);
-          if (key && (key.startsWith("supabase") || key.startsWith("sb-"))) {
-            sessionKeysToRemove.push(key);
-          }
-        }
-        sessionKeysToRemove.forEach((key) => sessionStorage.removeItem(key));
+        console.log("Storage cleared");
+      }
 
-        console.log("Redirecting to home...");
+      console.log("=== SIGN OUT COMPLETED ===");
 
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 100);
+      // Force page reload to ensure clean state
+      if (typeof window !== "undefined") {
+        console.log("Reloading page...");
+        window.location.href = "/";
       }
     } catch (error) {
-      console.error("Error during sign out:", error);
+      console.error("Sign out error:", error);
 
+      // Force cleanup even on error
       setUser(null);
       setProfile(null);
-      setSigningOut(false);
 
       if (typeof window !== "undefined") {
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 100);
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.href = "/";
       }
+    } finally {
+      setSigningOut(false);
     }
   };
 
