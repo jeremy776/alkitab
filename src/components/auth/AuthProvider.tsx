@@ -176,82 +176,57 @@ export default function AuthProvider({
       return;
     }
 
-    console.log("=== SIGN OUT STARTED ===");
+    console.log("=== PRODUCTION-OPTIMIZED SIGN OUT ===");
     setSigningOut(true);
 
-    const forceRedirectTimer = setTimeout(() => {
-      console.log("Sign out taking too long, forcing redirect...");
+    try {
+      console.log("Clearing local state immediately...");
       setUser(null);
       setProfile(null);
-      setSigningOut(false);
 
       if (typeof window !== "undefined") {
-        localStorage.clear();
-        sessionStorage.clear();
-        // window.location.href = "/";
+        console.log("Clearing storage immediately...");
+
+        try {
+          localStorage.clear();
+
+          sessionStorage.clear();
+
+          console.log("Storage cleared successfully");
+        } catch (storageError) {
+          console.error("Storage clear error (ignoring):", storageError);
+        }
       }
-    }, 3000); // 3 second timeout
 
-    try {
-      console.log("Clearing local state...");
-      setUser(null);
-      setProfile(null);
+      console.log("Attempting Supabase signOut (background)...");
+      supabase.auth.signOut().catch((error) => {
+        console.log("Supabase signOut failed (ignoring):", error);
+      });
 
-      console.log("Attempting sign out...");
-
-      const signOutPromise = supabase.auth.signOut();
-
-      const globalSignOutPromise = supabase.auth.signOut({ scope: "global" });
-
-      // Race between the two methods with timeout
-      const signOutResult = await Promise.race([
-        signOutPromise,
-        globalSignOutPromise,
-        new Promise((_, reject) =>
-          setTimeout(() => reject(new Error("Sign out timeout")), 2000)
-        ),
-      ]);
-
-      console.log("Sign out successful:", signOutResult);
-      clearTimeout(forceRedirectTimer);
+      console.log("Forcing immediate redirect...");
+      if (typeof window !== "undefined") {
+        setTimeout(() => {
+          try {
+            window.location.replace("/");
+          } catch (e) {
+            // Fallback redirect method
+            window.location.href = "/";
+          }
+        }, 100);
+      }
     } catch (error) {
-      console.error("Sign out error:", error);
-      console.error(error);
-      clearTimeout(forceRedirectTimer);
-    }
+      console.error("Sign out error (proceeding anyway):", error);
 
-    // Always clear storage and redirect regardless of API success
-    try {
       if (typeof window !== "undefined") {
-        console.log("Clearing storage...");
-
-        // Clear specific Supabase keys first
-        Object.keys(localStorage).forEach((key) => {
-          if (key.startsWith("sb-") || key.includes("supabase")) {
-            localStorage.removeItem(key);
-          }
-        });
-
-        Object.keys(sessionStorage).forEach((key) => {
-          if (key.startsWith("sb-") || key.includes("supabase")) {
-            sessionStorage.removeItem(key);
-          }
-        });
-
-        console.log("Storage cleared, redirecting...");
-
-        // Force immediate redirect
-        // window.location.replace("/");
+        setTimeout(() => {
+          window.location.replace("/");
+        }, 100);
       }
-    } catch (storageError) {
-      console.error("Storage clear error:", storageError);
-      // Still try to redirect even if storage clear fails
-      if (typeof window !== "undefined") {
-        window.location.replace("/");
-      }
+    } finally {
+      setTimeout(() => {
+        setSigningOut(false);
+      }, 1000);
     }
-
-    setSigningOut(false);
   };
 
   return (
