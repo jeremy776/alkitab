@@ -241,7 +241,7 @@ export default function AuthProvider({
         console.log("Storage cleared, redirecting...");
 
         // Force immediate redirect
-        window.location.replace("/");
+        // window.location.replace("/");
       }
     } catch (storageError) {
       console.error("Storage clear error:", storageError);
