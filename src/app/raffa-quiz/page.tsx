@@ -16,73 +16,178 @@ import Footer from "@/components/footer";
 const quizData = [
   {
     "id": 1,
-    "question": "Apa warna bendera Indonesia?",
-    "options": ["Merah-Putih", "Putih-Merah", "Merah-Kuning", "Putih-Biru"],
-    "correct": 0,
-    "explanation": "Bendera Indonesia berwarna merah di atas dan putih di bawah."
+    "question": "Organ tubuh manusia yang berfungsi untuk memompa darah ke seluruh tubuh adalah?",
+    "options": ["Paru-paru", "Lambung", "Usus", "Jantung"],
+    "correct": 3,
+    "explanation": "Jantung memompa darah ke seluruh tubuh."
   },
   {
     "id": 2,
-    "question": "Berapa hasil dari 7 x 6?",
-    "options": ["42", "36", "48", "40"],
-    "correct": 0,
-    "explanation": "7 x 6 = 42."
+    "question": "Bagian tumbuhan yang berfungsi menyerap air dan mineral dari tanah adalah?",
+    "options": ["Batang", "Akar", "Daun", "Bunga"],
+    "correct": 1,
+    "explanation": "Akar menyerap air dan mineral dari tanah."
   },
   {
     "id": 3,
-    "question": "Hewan manakah yang bisa hidup di darat dan air?",
-    "options": ["Kucing", "Katak", "Ayam", "Sapi"],
+    "question": "Alat optik yang digunakan untuk melihat benda-benda kecil adalah?",
+    "options": ["Teleskop", "Mikroskop", "Kamera", "Kaca pembesar"],
     "correct": 1,
-    "explanation": "Katak adalah hewan amfibi yang bisa hidup di darat dan di air."
+    "explanation": "Mikroskop digunakan untuk melihat benda mikroskopis."
   },
   {
     "id": 4,
-    "question": "Siapa presiden pertama Republik Indonesia?",
-    "options": ["Joko Widodo", "BJ Habibie", "Sukarno", "Megawati"],
-    "correct": 2,
-    "explanation": "Presiden pertama Indonesia adalah Ir. Sukarno."
+    "question": "Zat yang dapat menghantarkan listrik dengan baik disebut?",
+    "options": ["Isolator", "Konduktor", "Semikonduktor", "Plastik"],
+    "correct": 1,
+    "explanation": "Konduktor menghantarkan listrik dengan baik, misalnya logam."
   },
   {
     "id": 5,
-    "question": "Apa nama planet yang kita tinggali?",
-    "options": ["Mars", "Venus", "Bumi", "Saturnus"],
+    "question": "Hewan berikut ini termasuk hewan ovipar, kecuali?",
+    "options": ["Ayam", "Ikan", "Kucing", "Burung"],
     "correct": 2,
-    "explanation": "Manusia tinggal di planet Bumi."
+    "explanation": "Kucing berkembang biak dengan melahirkan (vivipar)."
   },
   {
     "id": 6,
-    "question": "Alat musik 'Angklung' berasal dari daerah mana?",
-    "options": ["Jawa Timur", "Bali", "Jawa Barat", "Sumatera Barat"],
+    "question": "Satuan dari gaya dalam sistem internasional adalah?",
+    "options": ["Kg", "Meter", "Newton", "Joule"],
     "correct": 2,
-    "explanation": "Angklung adalah alat musik tradisional dari Jawa Barat."
+    "explanation": "Gaya diukur dalam satuan Newton (N)."
   },
   {
     "id": 7,
-    "question": "Hewan yang dikenal sebagai 'raja hutan' adalah?",
-    "options": ["Harimau", "Macan", "Singa", "Gajah"],
-    "correct": 2,
-    "explanation": "Singa sering disebut sebagai raja hutan."
+    "question": "Zat yang memiliki bentuk dan volume tetap disebut?",
+    "options": ["Padat", "Cair", "Gas", "Plasma"],
+    "correct": 0,
+    "explanation": "Zat padat memiliki bentuk dan volume yang tetap."
   },
   {
     "id": 8,
-    "question": "Berapa hasil dari 100 dibagi 10?",
-    "options": ["5", "10", "15", "20"],
-    "correct": 1,
-    "explanation": "100 dibagi 10 = 10."
+    "question": "Perubahan air menjadi uap disebut?",
+    "options": ["Mengembun", "Mencair", "Menguap", "Membeku"],
+    "correct": 2,
+    "explanation": "Menguap adalah proses perubahan dari cair ke gas."
   },
   {
     "id": 9,
-    "question": "Bahasa resmi negara Indonesia adalah?",
-    "options": ["Sunda", "Jawa", "Indonesia", "Melayu"],
-    "correct": 2,
-    "explanation": "Bahasa resmi Indonesia adalah Bahasa Indonesia."
+    "question": "Contoh tumbuhan yang berkembang biak dengan spora adalah?",
+    "options": ["Mangga", "Paku", "Jagung", "Ketela"],
+    "correct": 1,
+    "explanation": "Tumbuhan paku berkembang biak dengan spora."
   },
   {
     "id": 10,
-    "question": "Apa nama ibu kota Indonesia?",
-    "options": ["Bandung", "Surabaya", "Jakarta", "Medan"],
+    "question": "Fungsi utama daun pada tumbuhan adalah?",
+    "options": ["Bernapas", "Menopang bunga", "Fotosintesis", "Menyerap air"],
     "correct": 2,
-    "explanation": "Jakarta adalah ibu kota Indonesia (hingga pemindahan resmi ke Ibu Kota Nusantara)."
+    "explanation": "Daun berfungsi untuk fotosintesis, membuat makanan bagi tumbuhan."
+  },
+  {
+    "id": 11,
+    "question": "Hewan yang mengalami metamorfosis sempurna adalah?",
+    "options": ["Katak", "Kupu-kupu", "Kucing", "Cicak"],
+    "correct": 1,
+    "explanation": "Kupu-kupu mengalami metamorfosis sempurna: telur, larva, pupa, dewasa."
+  },
+  {
+    "id": 12,
+    "question": "Lapisan ozon berada di bagian atmosfer yang disebut?",
+    "options": ["Troposfer", "Stratosfer", "Mesosfer", "Termosfer"],
+    "correct": 1,
+    "explanation": "Lapisan ozon berada di stratosfer, melindungi dari sinar UV."
+  },
+  {
+    "id": 13,
+    "question": "Bagian mata yang mengatur banyaknya cahaya yang masuk adalah?",
+    "options": ["Retina", "Lensa", "Pupil", "Kornea"],
+    "correct": 2,
+    "explanation": "Pupil mengatur besar kecilnya cahaya yang masuk ke mata."
+  },
+  {
+    "id": 14,
+    "question": "Gigi manusia yang berfungsi untuk mengunyah makanan adalah?",
+    "options": ["Taring", "Gigi seri", "Geraham", "Gigi susu"],
+    "correct": 2,
+    "explanation": "Gigi geraham digunakan untuk mengunyah makanan."
+  },
+  {
+    "id": 15,
+    "question": "Alat pernapasan utama pada manusia adalah?",
+    "options": ["Mulut", "Paru-paru", "Trakea", "Kerongkongan"],
+    "correct": 1,
+    "explanation": "Paru-paru adalah organ utama sistem pernapasan manusia."
+  },
+  {
+    "id": 16,
+    "question": "Zat tunggal yang tidak bisa diuraikan lagi disebut?",
+    "options": ["Campuran", "Unsur", "Senyawa", "Larutan"],
+    "correct": 1,
+    "explanation": "Unsur adalah zat tunggal paling sederhana, seperti oksigen."
+  },
+  {
+    "id": 17,
+    "question": "Sumber energi utama bagi makhluk hidup di Bumi adalah?",
+    "options": ["Air", "Angin", "Matahari", "Tanah"],
+    "correct": 2,
+    "explanation": "Matahari adalah sumber energi utama untuk semua makhluk hidup."
+  },
+  {
+    "id": 18,
+    "question": "Tumbuhan memerlukan gas ... untuk fotosintesis.",
+    "options": ["Oksigen", "Karbon dioksida", "Nitrogen", "Hidrogen"],
+    "correct": 1,
+    "explanation": "Karbon dioksida digunakan tumbuhan saat fotosintesis."
+  },
+  {
+    "id": 19,
+    "question": "Makhluk hidup yang membuat makanan sendiri disebut?",
+    "options": ["Konsumen", "Herbivora", "Autotrof", "Karnivora"],
+    "correct": 2,
+    "explanation": "Autotrof adalah makhluk hidup yang bisa membuat makanan sendiri, seperti tumbuhan."
+  },
+  {
+    "id": 20,
+    "question": "Contoh perubahan kimia adalah?",
+    "options": ["Es mencair", "Air menguap", "Besi berkarat", "Plastik meleleh"],
+    "correct": 2,
+    "explanation": "Besi berkarat adalah reaksi kimia antara besi, air, dan oksigen."
+  },
+  {
+    "id": 21,
+    "question": "Alat ukur suhu disebut?",
+    "options": ["Barometer", "Higrometer", "Termometer", "Altimeter"],
+    "correct": 2,
+    "explanation": "Termometer digunakan untuk mengukur suhu."
+  },
+  {
+    "id": 22,
+    "question": "Hewan yang memiliki tulang belakang disebut?",
+    "options": ["Vertebrata", "Invertebrata", "Amfibi", "Mollusca"],
+    "correct": 0,
+    "explanation": "Vertebrata adalah kelompok hewan yang memiliki tulang belakang."
+  },
+  {
+    "id": 23,
+    "question": "Proses penguapan air dari permukaan daun disebut?",
+    "options": ["Respirasi", "Fotosintesis", "Transpirasi", "Evaporasi"],
+    "correct": 2,
+    "explanation": "Transpirasi adalah penguapan air melalui stomata daun."
+  },
+  {
+    "id": 24,
+    "question": "Planet terdekat dengan Matahari adalah?",
+    "options": ["Venus", "Bumi", "Merkurius", "Mars"],
+    "correct": 2,
+    "explanation": "Merkurius adalah planet yang paling dekat dengan Matahari."
+  },
+  {
+    "id": 25,
+    "question": "Gaya yang bekerja saat kita menendang bola disebut?",
+    "options": ["Gaya magnet", "Gaya otot", "Gaya gravitasi", "Gaya gesek"],
+    "correct": 1,
+    "explanation": "Gaya otot berasal dari tenaga tubuh yang menggerakkan benda."
   }
 ]
 
@@ -92,7 +197,7 @@ export default function ChristianQuiz() {
   const [showResult, setShowResult] = useState(false);
   const [score, setScore] = useState(0);
   const [answers, setAnswers] = useState([]);
-  const [timeLeft, setTimeLeft] = useState(60); // 10 minutes
+  const [timeLeft, setTimeLeft] = useState(600); // 10 minutes
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [showExplanation, setShowExplanation] = useState(false);
 
