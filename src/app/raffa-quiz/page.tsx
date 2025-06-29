@@ -16,356 +16,74 @@ import Footer from "@/components/footer";
 const quizData = [
   {
     "id": 1,
-    "question": "Ibukota negara Jepang adalah?",
-    "options": ["Osaka", "Kyoto", "Tokyo", "Nagoya"],
-    "correct": 2,
-    "explanation": "Tokyo adalah ibukota Jepang dan salah satu kota terpadat di dunia."
+    "question": "Apa warna bendera Indonesia?",
+    "options": ["Merah-Putih", "Putih-Merah", "Merah-Kuning", "Putih-Biru"],
+    "correct": 0,
+    "explanation": "Bendera Indonesia berwarna merah di atas dan putih di bawah."
   },
   {
     "id": 2,
-    "question": "Apa simbol kimia untuk unsur Emas?",
-    "options": ["Au", "Ag", "Fe", "Cu"],
+    "question": "Berapa hasil dari 7 x 6?",
+    "options": ["42", "36", "48", "40"],
     "correct": 0,
-    "explanation": "Simbol kimia Emas adalah Au, berasal dari kata Latin 'Aurum'."
+    "explanation": "7 x 6 = 42."
   },
   {
     "id": 3,
-    "question": "Siapa presiden pertama Indonesia?",
-    "options": ["Soeharto", "BJ Habibie", "Ir. Soekarno", "Megawati"],
-    "correct": 2,
-    "explanation": "Ir. Soekarno adalah presiden pertama Indonesia, menjabat sejak 1945."
+    "question": "Hewan manakah yang bisa hidup di darat dan air?",
+    "options": ["Kucing", "Katak", "Ayam", "Sapi"],
+    "correct": 1,
+    "explanation": "Katak adalah hewan amfibi yang bisa hidup di darat dan di air."
   },
   {
     "id": 4,
-    "question": "Berapa jumlah sisi pada kubus?",
-    "options": ["4", "6", "8", "12"],
-    "correct": 1,
-    "explanation": "Kubus memiliki 6 sisi yang berbentuk persegi."
+    "question": "Siapa presiden pertama Republik Indonesia?",
+    "options": ["Joko Widodo", "BJ Habibie", "Sukarno", "Megawati"],
+    "correct": 2,
+    "explanation": "Presiden pertama Indonesia adalah Ir. Sukarno."
   },
   {
     "id": 5,
-    "question": "Planet manakah yang disebut 'planet merah'?",
-    "options": ["Venus", "Mars", "Jupiter", "Merkurius"],
-    "correct": 1,
-    "explanation": "Mars disebut planet merah karena permukaannya mengandung banyak besi oksida."
+    "question": "Apa nama planet yang kita tinggali?",
+    "options": ["Mars", "Venus", "Bumi", "Saturnus"],
+    "correct": 2,
+    "explanation": "Manusia tinggal di planet Bumi."
   },
   {
     "id": 6,
-    "question": "Bahasa pemrograman manakah yang paling umum digunakan untuk web frontend?",
-    "options": ["Python", "Java", "JavaScript", "C++"],
+    "question": "Alat musik 'Angklung' berasal dari daerah mana?",
+    "options": ["Jawa Timur", "Bali", "Jawa Barat", "Sumatera Barat"],
     "correct": 2,
-    "explanation": "JavaScript adalah bahasa utama untuk membangun tampilan website interaktif."
+    "explanation": "Angklung adalah alat musik tradisional dari Jawa Barat."
   },
   {
     "id": 7,
-    "question": "Gunung tertinggi di Indonesia adalah?",
-    "options": ["Semeru", "Rinjani", "Jayawijaya", "Kerinci"],
+    "question": "Hewan yang dikenal sebagai 'raja hutan' adalah?",
+    "options": ["Harimau", "Macan", "Singa", "Gajah"],
     "correct": 2,
-    "explanation": "Gunung Jayawijaya (Puncak Jaya) adalah gunung tertinggi di Indonesia, terletak di Papua."
+    "explanation": "Singa sering disebut sebagai raja hutan."
   },
   {
     "id": 8,
-    "question": "Apa nama zat yang dibutuhkan tumbuhan untuk fotosintesis?",
-    "options": ["Karbon dioksida", "Nitrogen", "Oksigen", "Karbohidrat"],
-    "correct": 0,
-    "explanation": "Tumbuhan memerlukan karbon dioksida, air, dan cahaya matahari untuk fotosintesis."
+    "question": "Berapa hasil dari 100 dibagi 10?",
+    "options": ["5", "10", "15", "20"],
+    "correct": 1,
+    "explanation": "100 dibagi 10 = 10."
   },
   {
     "id": 9,
-    "question": "Siapakah penemu bola lampu pijar?",
-    "options": ["Alexander Graham Bell", "Isaac Newton", "Albert Einstein", "Thomas Edison"],
-    "correct": 3,
-    "explanation": "Thomas Edison dikenal sebagai penemu bola lampu pijar yang dapat bertahan lama."
+    "question": "Bahasa resmi negara Indonesia adalah?",
+    "options": ["Sunda", "Jawa", "Indonesia", "Melayu"],
+    "correct": 2,
+    "explanation": "Bahasa resmi Indonesia adalah Bahasa Indonesia."
   },
   {
     "id": 10,
-    "question": "Negara manakah yang memiliki bendera merah-putih horizontal?",
-    "options": ["Indonesia", "Polandia", "Monako", "Austria"],
-    "correct": 1,
-    "explanation": "Polandia memiliki bendera merah-putih dengan susunan horizontal, merah di bawah."
-  },
-  {
-    "id": 11,
-    "question": "Apa satuan untuk mengukur kekuatan arus listrik?",
-    "options": ["Volt", "Watt", "Ampere", "Ohm"],
+    "question": "Apa nama ibu kota Indonesia?",
+    "options": ["Bandung", "Surabaya", "Jakarta", "Medan"],
     "correct": 2,
-    "explanation": "Ampere digunakan untuk mengukur kekuatan arus listrik."
-  },
-  {
-    "id": 12,
-    "question": "Dalam sistem periodik unsur, golongan mana yang dikenal sebagai gas mulia?",
-    "options": ["Golongan I", "Golongan II", "Golongan VII", "Golongan VIII"],
-    "correct": 3,
-    "explanation": "Golongan VIII A adalah gas mulia seperti helium, neon, dan argon."
-  },
-  {
-    "id": 13,
-    "question": "Siapa penulis naskah proklamasi kemerdekaan Indonesia?",
-    "options": ["Sukarno", "Sjahrir", "Sutan Sjahrir", "Moh. Hatta"],
-    "correct": 0,
-    "explanation": "Teks proklamasi ditulis oleh Sukarno dan diketik oleh Sayuti Melik."
-  },
-  {
-    "id": 14,
-    "question": "Alat musik tradisional 'angklung' berasal dari daerah?",
-    "options": ["Jawa Tengah", "Bali", "Sumatera Barat", "Jawa Barat"],
-    "correct": 3,
-    "explanation": "Angklung berasal dari Jawa Barat dan terbuat dari bambu."
-  },
-  {
-    "id": 15,
-    "question": "Apa nama ilmiah dari air?",
-    "options": ["CO2", "H2O", "NaCl", "O2"],
-    "correct": 1,
-    "explanation": "Air terdiri dari dua atom hidrogen dan satu atom oksigen, yaitu H2O."
-  },
-  {
-    "id": 16,
-    "question": "Berapakah hasil dari 5! (faktorial 5)?",
-    "options": ["60", "120", "100", "80"],
-    "correct": 1,
-    "explanation": "5! = 5×4×3×2×1 = 120."
-  },
-  {
-    "id": 17,
-    "question": "Kapan Indonesia merdeka?",
-    "options": ["1944", "1945", "1946", "1950"],
-    "correct": 1,
-    "explanation": "Indonesia merdeka pada 17 Agustus 1945."
-  },
-  {
-    "id": 18,
-    "question": "Siapakah penemu teori relativitas?",
-    "options": ["Nikola Tesla", "Isaac Newton", "Albert Einstein", "Galileo Galilei"],
-    "correct": 2,
-    "explanation": "Albert Einstein dikenal karena teori relativitas yang merevolusi fisika."
-  },
-  {
-    "id": 19,
-    "question": "Laut terdalam di dunia adalah?",
-    "options": ["Laut Merah", "Laut Cina Selatan", "Palung Mariana", "Laut Jepang"],
-    "correct": 2,
-    "explanation": "Palung Mariana adalah titik terdalam lautan di dunia, terletak di Samudra Pasifik."
-  },
-  {
-    "id": 20,
-    "question": "Apa nama alat untuk mengukur suhu?",
-    "options": ["Higrometer", "Barometer", "Termometer", "Altimeter"],
-    "correct": 2,
-    "explanation": "Termometer digunakan untuk mengukur suhu tubuh atau lingkungan."
-  },
-  {
-    "id": 21,
-    "question": "Apa nama planet terbesar di Tata Surya?",
-    "options": ["Saturnus", "Neptunus", "Jupiter", "Uranus"],
-    "correct": 2,
-    "explanation": "Jupiter adalah planet terbesar di Tata Surya."
-  },
-  {
-    "id": 22,
-    "question": "Siapa pelukis terkenal dari Italia yang membuat lukisan Mona Lisa?",
-    "options": ["Michelangelo", "Leonardo da Vinci", "Raphael", "Donatello"],
-    "correct": 1,
-    "explanation": "Mona Lisa dilukis oleh Leonardo da Vinci pada abad ke-16."
-  },
-  {
-    "id": 23,
-    "question": "Apa ibu kota provinsi Sumatera Utara?",
-    "options": ["Medan", "Padang", "Pekanbaru", "Palembang"],
-    "correct": 0,
-    "explanation": "Medan adalah ibu kota dari provinsi Sumatera Utara."
-  },
-  {
-    "id": 24,
-    "question": "Siapakah penulis novel 'Laskar Pelangi'?",
-    "options": ["Andrea Hirata", "Tere Liye", "Habiburrahman El Shirazy", "Dewi Lestari"],
-    "correct": 0,
-    "explanation": "Andrea Hirata menulis novel 'Laskar Pelangi' berdasarkan kisah masa kecilnya."
-  },
-  {
-    "id": 25,
-    "question": "Berapakah sudut dalam pada segitiga sama sisi?",
-    "options": ["30°", "45°", "60°", "90°"],
-    "correct": 2,
-    "explanation": "Setiap sudut dalam segitiga sama sisi adalah 60°."
-  },
-  {
-    "id": 26,
-    "question": "Siapa nama penemu telepon?",
-    "options": ["Thomas Edison", "Alexander Graham Bell", "James Watt", "Nikola Tesla"],
-    "correct": 1,
-    "explanation": "Alexander Graham Bell dikenal sebagai penemu telepon."
-  },
-  {
-    "id": 27,
-    "question": "Apa nama zat pewarna alami dari tumbuhan yang digunakan dalam batik?",
-    "options": ["Temulawak", "Indigo", "Kayu manis", "Jati"],
-    "correct": 1,
-    "explanation": "Indigo adalah pewarna biru alami yang sering dipakai dalam batik."
-  },
-  {
-    "id": 28,
-    "question": "Bahasa resmi PBB berikut ini, kecuali?",
-    "options": ["Arab", "Spanyol", "Portugis", "Cina"],
-    "correct": 2,
-    "explanation": "Bahasa resmi PBB adalah Arab, Inggris, Perancis, Rusia, Spanyol, dan Mandarin. Portugis tidak termasuk."
-  },
-  {
-    "id": 29,
-    "question": "Negara manakah yang dikenal sebagai negeri tirai bambu?",
-    "options": ["Korea", "Vietnam", "Thailand", "Tiongkok"],
-    "correct": 3,
-    "explanation": "Tiongkok (China) sering disebut negeri tirai bambu."
-  },
-  {
-    "id": 30,
-    "question": "Berapakah volume sebuah kubus dengan panjang sisi 5 cm?",
-    "options": ["25 cm³", "100 cm³", "125 cm³", "150 cm³"],
-    "correct": 2,
-    "explanation": "Volume kubus = sisi × sisi × sisi = 5×5×5 = 125 cm³."
-  },
-  {
-    "id": 31,
-    "question": "Siapa tokoh utama dalam epos Mahabharata yang dikenal sebagai pemanah ulung?",
-    "options": ["Bhima", "Yudistira", "Arjuna", "Duryodana"],
-    "correct": 2,
-    "explanation": "Arjuna adalah tokoh pemanah utama dalam Mahabharata."
-  },
-  {
-    "id": 32,
-    "question": "Di mana letak jantung manusia?",
-    "options": ["Tengah dada", "Kiri atas dada", "Kanan bawah dada", "Kiri bawah dada"],
-    "correct": 1,
-    "explanation": "Jantung terletak di rongga dada agak ke kiri atas."
-  },
-  {
-    "id": 33,
-    "question": "Apa fungsi utama daun pada tumbuhan?",
-    "options": ["Menyerap air", "Menyerap cahaya", "Melakukan fotosintesis", "Tempat menyimpan makanan"],
-    "correct": 2,
-    "explanation": "Daun adalah tempat utama terjadinya fotosintesis."
-  },
-  {
-    "id": 34,
-    "question": "Apa nama unsur dengan simbol 'Fe'?",
-    "options": ["Fluorin", "Fosfor", "Fermium", "Besi"],
-    "correct": 3,
-    "explanation": "Simbol Fe berasal dari bahasa Latin 'Ferrum' yang berarti Besi."
-  },
-  {
-    "id": 35,
-    "question": "Apa alat musik tradisional dari Kalimantan yang dipukul?",
-    "options": ["Tifa", "Sape", "Gendang", "Gambus"],
-    "correct": 2,
-    "explanation": "Gendang adalah alat musik pukul tradisional yang juga digunakan di Kalimantan."
-  },
-  {
-    "id": 36,
-    "question": "Apa nama alat optik untuk melihat benda sangat kecil?",
-    "options": ["Teleskop", "Kamera", "Mikroskop", "Periskop"],
-    "correct": 2,
-    "explanation": "Mikroskop digunakan untuk melihat mikroorganisme dan benda kecil lainnya."
-  },
-  {
-    "id": 37,
-    "question": "Tari Kecak berasal dari daerah?",
-    "options": ["Jawa Barat", "Bali", "Sumatera", "Kalimantan"],
-    "correct": 1,
-    "explanation": "Tari Kecak adalah tarian tradisional Bali yang populer di kalangan wisatawan."
-  },
-  {
-    "id": 38,
-    "question": "Negara manakah yang pertama kali mendaratkan manusia di Bulan?",
-    "options": ["Rusia", "Amerika Serikat", "Tiongkok", "India"],
-    "correct": 1,
-    "explanation": "Amerika Serikat berhasil mendaratkan Neil Armstrong ke Bulan tahun 1969 melalui misi Apollo 11."
-  },
-  {
-    "id": 39,
-    "question": "Apa lambang dari bilangan tak hingga?",
-    "options": ["∞", "π", "√", "∑"],
-    "correct": 0,
-    "explanation": "Simbol ∞ melambangkan tak hingga dalam matematika."
-  },
-  {
-    "id": 40,
-    "question": "Sungai terpanjang di dunia adalah?",
-    "options": ["Amazon", "Nil", "Yangtze", "Mississippi"],
-    "correct": 1,
-    "explanation": "Sungai Nil di Afrika dianggap sebagai sungai terpanjang di dunia."
-  },
-  {
-    "id": 41,
-    "question": "Lambang sila pertama Pancasila adalah?",
-    "options": ["Bintang", "Rantai", "Pohon Beringin", "Padi dan Kapas"],
-    "correct": 0,
-    "explanation": "Sila pertama: Ketuhanan Yang Maha Esa dilambangkan dengan bintang emas."
-  },
-  {
-    "id": 42,
-    "question": "Berapa jumlah provinsi di Indonesia setelah pemekaran Papua pada 2022?",
-    "options": ["34", "36", "38", "40"],
-    "correct": 2,
-    "explanation": "Jumlah provinsi di Indonesia menjadi 38 setelah pemekaran Papua."
-  },
-  {
-    "id": 43,
-    "question": "Apa nama bagian otak yang mengatur keseimbangan?",
-    "options": ["Otak besar", "Sumsum tulang belakang", "Otak tengah", "Otak kecil"],
-    "correct": 3,
-    "explanation": "Otak kecil (cerebellum) mengatur koordinasi gerak dan keseimbangan tubuh."
-  },
-  {
-    "id": 44,
-    "question": "Apa rumus luas segitiga?",
-    "options": ["s × s", "½ × a × t", "p × l", "a² + b² = c²"],
-    "correct": 1,
-    "explanation": "Luas segitiga = ½ × alas × tinggi."
-  },
-  {
-    "id": 45,
-    "question": "Apa nama ibukota Australia?",
-    "options": ["Sydney", "Melbourne", "Perth", "Canberra"],
-    "correct": 3,
-    "explanation": "Canberra adalah ibukota resmi Australia, bukan Sydney."
-  },
-  {
-    "id": 46,
-    "question": "Kapan Sumpah Pemuda diikrarkan?",
-    "options": ["1926", "1927", "1928", "1929"],
-    "correct": 2,
-    "explanation": "Sumpah Pemuda diikrarkan pada 28 Oktober 1928."
-  },
-  {
-    "id": 47,
-    "question": "Siapakah tokoh perempuan pelopor pendidikan di Indonesia?",
-    "options": ["Dewi Sartika", "Fatmawati", "RA Kartini", "Martha Christina"],
-    "correct": 2,
-    "explanation": "RA Kartini dikenal sebagai pelopor pendidikan bagi perempuan Indonesia."
-  },
-  {
-    "id": 48,
-    "question": "Apakah nama senyawa garam dapur dalam kimia?",
-    "options": ["NaCl", "KCl", "NH3", "HCl"],
-    "correct": 0,
-    "explanation": "Garam dapur adalah natrium klorida dengan rumus kimia NaCl."
-  },
-  {
-    "id": 49,
-    "question": "Hewan apa yang dikenal memiliki kemampuan ekolokasi?",
-    "options": ["Gajah", "Kucing", "Kelelawar", "Burung hantu"],
-    "correct": 2,
-    "explanation": "Kelelawar menggunakan ekolokasi untuk navigasi dan menangkap mangsa."
-  },
-  {
-    "id": 50,
-    "question": "Siapakah penemu komputer pertama kali?",
-    "options": ["Alan Turing", "Charles Babbage", "Bill Gates", "Steve Jobs"],
-    "correct": 1,
-    "explanation": "Charles Babbage dikenal sebagai penemu komputer mekanik pertama pada abad ke-19."
+    "explanation": "Jakarta adalah ibu kota Indonesia (hingga pemindahan resmi ke Ibu Kota Nusantara)."
   }
-
-  // Masih 20 soal. Jika kamu ingin saya lanjutkan hingga 50, tinggal beri konfirmasi
 ]
 
 export default function ChristianQuiz() {
@@ -374,7 +92,7 @@ export default function ChristianQuiz() {
   const [showResult, setShowResult] = useState(false);
   const [score, setScore] = useState(0);
   const [answers, setAnswers] = useState([]);
-  const [timeLeft, setTimeLeft] = useState(1800); // 10 minutes
+  const [timeLeft, setTimeLeft] = useState(60); // 10 minutes
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [showExplanation, setShowExplanation] = useState(false);
 
