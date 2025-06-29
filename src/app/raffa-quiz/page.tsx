@@ -16,178 +16,108 @@ import Footer from "@/components/footer";
 const quizData = [
   {
     "id": 1,
-    "question": "Organ tubuh manusia yang berfungsi untuk memompa darah ke seluruh tubuh adalah?",
-    "options": ["Paru-paru", "Lambung", "Usus", "Jantung"],
-    "correct": 3,
-    "explanation": "Jantung memompa darah ke seluruh tubuh."
+    "question": "Hasil dari (2x + 3)(x - 5) adalah?",
+    "options": ["2x² - 10x + 3x - 15", "2x² - 7x - 15", "2x² + 7x - 15", "2x² - 7x + 15"],
+    "correct": 1,
+    "explanation": "Gunakan distributif: (2x + 3)(x - 5) = 2x² - 10x + 3x - 15 = 2x² - 7x -15."
   },
   {
     "id": 2,
-    "question": "Bagian tumbuhan yang berfungsi menyerap air dan mineral dari tanah adalah?",
-    "options": ["Batang", "Akar", "Daun", "Bunga"],
-    "correct": 1,
-    "explanation": "Akar menyerap air dan mineral dari tanah."
+    "question": "Jika sin x = 1/2 dan 0° < x < 180°, maka nilai x adalah?",
+    "options": ["30° atau 150°", "45° atau 135°", "60° atau 120°", "90°"],
+    "correct": 0,
+    "explanation": "sin x = 1/2 untuk x = 30° dan 150°."
   },
   {
     "id": 3,
-    "question": "Alat optik yang digunakan untuk melihat benda-benda kecil adalah?",
-    "options": ["Teleskop", "Mikroskop", "Kamera", "Kaca pembesar"],
-    "correct": 1,
-    "explanation": "Mikroskop digunakan untuk melihat benda mikroskopis."
+    "question": "Jika f(x) = 2x² - 3x + 1, maka f(2) = ?",
+    "options": ["3", "5", "7", "9"],
+    "correct": 2,
+    "explanation": "f(2) = 2(2)² - 3(2) + 1 = 8 - 6 + 1 = 3."
   },
   {
     "id": 4,
-    "question": "Zat yang dapat menghantarkan listrik dengan baik disebut?",
-    "options": ["Isolator", "Konduktor", "Semikonduktor", "Plastik"],
-    "correct": 1,
-    "explanation": "Konduktor menghantarkan listrik dengan baik, misalnya logam."
+    "question": "Akar-akar dari x² - 5x + 6 = 0 adalah?",
+    "options": ["x = 2 dan 3", "x = 1 dan 6", "x = -2 dan -3", "x = 1 dan 5"],
+    "correct": 0,
+    "explanation": "Faktorisasi: (x - 2)(x - 3) = 0 → x = 2 atau 3."
   },
   {
     "id": 5,
-    "question": "Hewan berikut ini termasuk hewan ovipar, kecuali?",
-    "options": ["Ayam", "Ikan", "Kucing", "Burung"],
+    "question": "Berapakah nilai log₁₀ 1000?",
+    "options": ["1", "2", "3", "4"],
     "correct": 2,
-    "explanation": "Kucing berkembang biak dengan melahirkan (vivipar)."
+    "explanation": "log₁₀ 1000 = log₁₀ 10³ = 3."
   },
   {
     "id": 6,
-    "question": "Satuan dari gaya dalam sistem internasional adalah?",
-    "options": ["Kg", "Meter", "Newton", "Joule"],
+    "question": "Rumus luas lingkaran adalah?",
+    "options": ["πd", "πr", "πr²", "2πr"],
     "correct": 2,
-    "explanation": "Gaya diukur dalam satuan Newton (N)."
+    "explanation": "Luas lingkaran = π × r²."
   },
   {
     "id": 7,
-    "question": "Zat yang memiliki bentuk dan volume tetap disebut?",
-    "options": ["Padat", "Cair", "Gas", "Plasma"],
+    "question": "Jika rata-rata dari 4, 6, 8, x adalah 7, maka x adalah?",
+    "options": ["10", "9", "8", "7"],
     "correct": 0,
-    "explanation": "Zat padat memiliki bentuk dan volume yang tetap."
+    "explanation": "(4+6+8+x)/4 = 7 → 18 + x = 28 → x = 10."
   },
   {
     "id": 8,
-    "question": "Perubahan air menjadi uap disebut?",
-    "options": ["Mengembun", "Mencair", "Menguap", "Membeku"],
-    "correct": 2,
-    "explanation": "Menguap adalah proses perubahan dari cair ke gas."
+    "question": "Himpunan penyelesaian dari |x - 3| = 5 adalah?",
+    "options": ["x = 2 atau -2", "x = 8 atau -2", "x = 8 atau -8", "x = 8 atau -5"],
+    "correct": 1,
+    "explanation": "x - 3 = 5 → x = 8 atau x - 3 = -5 → x = -2."
   },
   {
     "id": 9,
-    "question": "Contoh tumbuhan yang berkembang biak dengan spora adalah?",
-    "options": ["Mangga", "Paku", "Jagung", "Ketela"],
-    "correct": 1,
-    "explanation": "Tumbuhan paku berkembang biak dengan spora."
+    "question": "Hasil dari 3² + 4² adalah?",
+    "options": ["5", "9", "25", "7"],
+    "correct": 2,
+    "explanation": "3² + 4² = 9 + 16 = 25."
   },
   {
     "id": 10,
-    "question": "Fungsi utama daun pada tumbuhan adalah?",
-    "options": ["Bernapas", "Menopang bunga", "Fotosintesis", "Menyerap air"],
-    "correct": 2,
-    "explanation": "Daun berfungsi untuk fotosintesis, membuat makanan bagi tumbuhan."
+    "question": "Jika a = 2 dan b = 3, maka nilai dari (a + b)² adalah?",
+    "options": ["25", "36", "49", "16"],
+    "correct": 0,
+    "explanation": "(2 + 3)² = 5² = 25."
   },
   {
     "id": 11,
-    "question": "Hewan yang mengalami metamorfosis sempurna adalah?",
-    "options": ["Katak", "Kupu-kupu", "Kucing", "Cicak"],
+    "question": "Jumlah sudut segitiga adalah?",
+    "options": ["90°", "180°", "270°", "360°"],
     "correct": 1,
-    "explanation": "Kupu-kupu mengalami metamorfosis sempurna: telur, larva, pupa, dewasa."
+    "explanation": "Jumlah sudut segitiga selalu 180°."
   },
   {
     "id": 12,
-    "question": "Lapisan ozon berada di bagian atmosfer yang disebut?",
-    "options": ["Troposfer", "Stratosfer", "Mesosfer", "Termosfer"],
-    "correct": 1,
-    "explanation": "Lapisan ozon berada di stratosfer, melindungi dari sinar UV."
+    "question": "Jika p(3, 4), maka jarak titik p ke titik asal (0, 0) adalah?",
+    "options": ["3", "4", "5", "6"],
+    "correct": 2,
+    "explanation": "√(3² + 4²) = √(9+16) = √25 = 5."
   },
   {
     "id": 13,
-    "question": "Bagian mata yang mengatur banyaknya cahaya yang masuk adalah?",
-    "options": ["Retina", "Lensa", "Pupil", "Kornea"],
-    "correct": 2,
-    "explanation": "Pupil mengatur besar kecilnya cahaya yang masuk ke mata."
+    "question": "Peluang muncul angka genap saat melempar dadu adalah?",
+    "options": ["1/3", "1/2", "2/3", "1/6"],
+    "correct": 1,
+    "explanation": "Angka genap: 2,4,6 → 3 dari 6 kemungkinan → 3/6 = 1/2."
   },
   {
     "id": 14,
-    "question": "Gigi manusia yang berfungsi untuk mengunyah makanan adalah?",
-    "options": ["Taring", "Gigi seri", "Geraham", "Gigi susu"],
-    "correct": 2,
-    "explanation": "Gigi geraham digunakan untuk mengunyah makanan."
+    "question": "Volume balok dengan panjang 4 cm, lebar 3 cm, dan tinggi 5 cm adalah?",
+    "options": ["60 cm³", "70 cm³", "50 cm³", "40 cm³"],
+    "correct": 0,
+    "explanation": "Volume = p × l × t = 4×3×5 = 60 cm³."
   },
   {
     "id": 15,
-    "question": "Alat pernapasan utama pada manusia adalah?",
-    "options": ["Mulut", "Paru-paru", "Trakea", "Kerongkongan"],
-    "correct": 1,
-    "explanation": "Paru-paru adalah organ utama sistem pernapasan manusia."
-  },
-  {
-    "id": 16,
-    "question": "Zat tunggal yang tidak bisa diuraikan lagi disebut?",
-    "options": ["Campuran", "Unsur", "Senyawa", "Larutan"],
-    "correct": 1,
-    "explanation": "Unsur adalah zat tunggal paling sederhana, seperti oksigen."
-  },
-  {
-    "id": 17,
-    "question": "Sumber energi utama bagi makhluk hidup di Bumi adalah?",
-    "options": ["Air", "Angin", "Matahari", "Tanah"],
+    "question": "Fungsi kuadrat y = x² - 4x + 4 memiliki titik puncak di?",
+    "options": ["(2,0)", "(4,2)", "(2,4)", "(0,4)"],
     "correct": 2,
-    "explanation": "Matahari adalah sumber energi utama untuk semua makhluk hidup."
-  },
-  {
-    "id": 18,
-    "question": "Tumbuhan memerlukan gas ... untuk fotosintesis.",
-    "options": ["Oksigen", "Karbon dioksida", "Nitrogen", "Hidrogen"],
-    "correct": 1,
-    "explanation": "Karbon dioksida digunakan tumbuhan saat fotosintesis."
-  },
-  {
-    "id": 19,
-    "question": "Makhluk hidup yang membuat makanan sendiri disebut?",
-    "options": ["Konsumen", "Herbivora", "Autotrof", "Karnivora"],
-    "correct": 2,
-    "explanation": "Autotrof adalah makhluk hidup yang bisa membuat makanan sendiri, seperti tumbuhan."
-  },
-  {
-    "id": 20,
-    "question": "Contoh perubahan kimia adalah?",
-    "options": ["Es mencair", "Air menguap", "Besi berkarat", "Plastik meleleh"],
-    "correct": 2,
-    "explanation": "Besi berkarat adalah reaksi kimia antara besi, air, dan oksigen."
-  },
-  {
-    "id": 21,
-    "question": "Alat ukur suhu disebut?",
-    "options": ["Barometer", "Higrometer", "Termometer", "Altimeter"],
-    "correct": 2,
-    "explanation": "Termometer digunakan untuk mengukur suhu."
-  },
-  {
-    "id": 22,
-    "question": "Hewan yang memiliki tulang belakang disebut?",
-    "options": ["Vertebrata", "Invertebrata", "Amfibi", "Mollusca"],
-    "correct": 0,
-    "explanation": "Vertebrata adalah kelompok hewan yang memiliki tulang belakang."
-  },
-  {
-    "id": 23,
-    "question": "Proses penguapan air dari permukaan daun disebut?",
-    "options": ["Respirasi", "Fotosintesis", "Transpirasi", "Evaporasi"],
-    "correct": 2,
-    "explanation": "Transpirasi adalah penguapan air melalui stomata daun."
-  },
-  {
-    "id": 24,
-    "question": "Planet terdekat dengan Matahari adalah?",
-    "options": ["Venus", "Bumi", "Merkurius", "Mars"],
-    "correct": 2,
-    "explanation": "Merkurius adalah planet yang paling dekat dengan Matahari."
-  },
-  {
-    "id": 25,
-    "question": "Gaya yang bekerja saat kita menendang bola disebut?",
-    "options": ["Gaya magnet", "Gaya otot", "Gaya gravitasi", "Gaya gesek"],
-    "correct": 1,
-    "explanation": "Gaya otot berasal dari tenaga tubuh yang menggerakkan benda."
+    "explanation": "Titik puncak: x = -b/2a = 4/2 = 2 → y = 2² - 4×2 + 4 = 4 - 8 + 4 = 0 → (2,0)."
   }
 ]
 
@@ -197,7 +127,7 @@ export default function ChristianQuiz() {
   const [showResult, setShowResult] = useState(false);
   const [score, setScore] = useState(0);
   const [answers, setAnswers] = useState([]);
-  const [timeLeft, setTimeLeft] = useState(600); // 10 minutes
+  const [timeLeft, setTimeLeft] = useState(60000); // 10 minutes
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [showExplanation, setShowExplanation] = useState(false);
 
